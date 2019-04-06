@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{843944A9-F3C8-4A75-BB67-4DAA68E4A4BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Websmith.DataLayer</RootNamespace>
+    <AssemblyName>Websmith.DataLayer</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Websmith.Bliss\packages\Newtonsoft.Json.10.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BranchMasterSetting.cs" />
+    <Compile Include="BranchSettingDetail.cs" />
+    <Compile Include="CategoryMaster.cs" />
+    <Compile Include="CategoryWiseProduct.cs" />
+    <Compile Include="CheckOutDetail.cs" />
+    <Compile Include="ChefKDSMapping.cs" />
+    <Compile Include="ComboDetail.cs" />
+    <Compile Include="ComboProductDetail.cs" />
+    <Compile Include="CRUDOperation.cs" />
+    <Compile Include="CustomerMasterData.cs" />
+    <Compile Include="DBHelper.cs" />
+    <Compile Include="DeviceMaster.cs" />
+    <Compile Include="DeviceTypeMaster.cs" />
+    <Compile Include="DiscountMasterDetail.cs" />
+    <Compile Include="DownStream.cs" />
+    <Compile Include="EmployeeMasterList.cs" />
+    <Compile Include="EmployeeShift.cs" />
+    <Compile Include="FeatureDetail.cs" />
+    <Compile Include="GeneralSetting.cs" />
+    <Compile Include="GetConnection.cs" />
+    <Compile Include="IngredientsMasterDetail.cs" />
+    <Compile Include="IngredientUnitTypeDetail.cs" />
+    <Compile Include="InwardDetail.cs" />
+    <Compile Include="InwardMaster.cs" />
+    <Compile Include="ItemChefMapping.cs" />
+    <Compile Include="LoginDetail.cs" />
+    <Compile Include="MergeTable.cs" />
+    <Compile Include="ModifierCategoryDetail.cs" />
+    <Compile Include="ModifierDetail.cs" />
+    <Compile Include="ModuleAppIDDetail.cs" />
+    <Compile Include="ModuleMasterDetail.cs" />
+    <Compile Include="OrderBook.cs" />
+    <Compile Include="OrderCombo.cs" />
+    <Compile Include="OrderWiseModifier.cs" />
+    <Compile Include="OutwardDetail.cs" />
+    <Compile Include="OutwardMaster.cs" />
+    <Compile Include="PaymentGatewayMaster.cs" />
+    <Compile Include="PrinterMapping.cs" />
+    <Compile Include="ProductClassMasterDetail.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecipeMasterData.cs" />
+    <Compile Include="RecipeMasterDetail.cs" />
+    <Compile Include="RightDetail.cs" />
+    <Compile Include="RoleMasterDetail.cs" />
+    <Compile Include="SecurityManager.cs" />
+    <Compile Include="ShiftMaster.cs" />
+    <Compile Include="ShiftMasterDetail.cs" />
+    <Compile Include="ShiftWiseEmployee.cs" />
+    <Compile Include="SubFeatureDetail.cs" />
+    <Compile Include="TableMasterDetail.cs" />
+    <Compile Include="TaxGroupDetail.cs" />
+    <Compile Include="TillManage.cs" />
+    <Compile Include="TillPayIn.cs" />
+    <Compile Include="TillPayOut.cs" />
+    <Compile Include="TimeSheetWiseDiscount.cs" />
+    <Compile Include="Transaction.cs" />
+    <Compile Include="UpStream.cs" />
+    <Compile Include="VendorMasterData.cs" />
+    <Compile Include="VendorTaxsNo.cs" />
+    <Compile Include="VersionDetail.cs" />
+    <Compile Include="ViewKOTRoutingPrint.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Websmith.Entity\Websmith.Entity\Websmith.Entity.csproj">
+      <Project>{f73040b3-5149-4ebe-9761-55434dfd8fff}</Project>
+      <Name>Websmith.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

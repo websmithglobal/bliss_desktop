@@ -1,0 +1,42 @@
+Date: 25-01-2018
+Set auto complete combo for select table in new order
+
+Date: 04-02-2018
+Alter SP GetSalesReport
+Create View ViewOrderTransaction
+======================================================
+Date: 25-01-2018
+Add column in Order table
+DiscountID (uniqueidentifier, null)
+
+Alter SP InsertUpdateDeleteOrder
+Alter SP GetOrder
+Alter SP GetTableMasterDetail
+
+update [order] set DiscountID='00000000-0000-0000-0000-000000000000' where DiscountID IS NULL
+
+set scroll in merge table and transfer table
+change for get table like ClassID insted of EmpID
+
+Done
+======================================================
+Date: 22-01-2018
+Add column in Order table
+IsPrint (int, null)	
+
+Alter SP InsertUpdateDeleteOrder
+Alter SP GetOrder
+
+Done
+======================================================
+Date: 19-01-2018
+Add column in Order table
+OrderStatus (int, null)	
+
+Alter SP InsertUpdateDeleteOrder
+Alter SP GetOrder
+Alter SP InsertUpdateDeleteCheckOutDetail
+
+Done
+======================================================
+Skype ID = 519 586 606

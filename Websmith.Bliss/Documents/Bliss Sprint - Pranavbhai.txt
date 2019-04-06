@@ -1,0 +1,80 @@
+Primary Background Color = R: 58 G: 173 B: 158  	= 58,173,158
+Primary Button Color Dark = R: 9 G: 89 B: 79  	=  9,89,79
+
+                           Bliss - Android
+
+- New web api implement and testing for bliss with virendrabhai
+- Upstream Web api logic change as per pratikbhai
+- Required Printer for invoice and kot
+- Required one more tab for socket 
+- Socket Communication should be work with windows POS
+- Design fine tune according Bliss color combination 
+- Socket communication testing with more than one tab
+- Print testing 
+- table design changes 
+- set Fab icon 
+- Order Tax in setting page - 1
+
+
+- Category/Item Grid size
+- Item Images Remove
+- Breadcrumb menu color change (Vaibhav)
+- Pay button color change
+- Payment fragmnet swape with category frag.
+- Fab button color change (primary color)
+- 
+
+
+
+
+---------------------------------------------------------------------------------------------
+                                 Bliss- Windows
+
+- New web api implement and testing for bliss with virendrabhai
+- Socket Communication should be work with windows POS
+
+
+- Creat Order
+  - Dynamic Tax 		- Done
+  - Dynamic Discount 		- Done
+  - Dynamic Delivery charge 	- Done
+
+  - Dynamic Item Tax
+  - Print invoice
+  - Print KOT
+
+
+- Setting Screen
+  - Device Info 		- Done
+  - Report (Date wise report) 	- Done 
+  - Add Device			- Done
+  - Add Staff 			- Done
+  - Kitchen Routing 		- Done
+  - Print Routing   		- Done
+  - General Setting 		- Done
+  - Logout 			- Done
+  - Add Menu(Category & Product)- Done
+
+  - Till
+  - Extra Inventory
+  - Add Stock
+  - Export Database
+  - Up Stream
+  - Down Stream 
+ 
+--------------------------------
+
+- Staff
+  - Staff List - Done
+  - Attendance
+  - Payroll
+
+--------------------------------
+
+- Table
+ - Table Filter (All,Open,Occupied, Reserved, My Table,Reseravation List) - Done
+ - Merge Table - Done
+ - Transfer Table - Done
+ - Reservation List 
+ - Make Reservation 
+ -

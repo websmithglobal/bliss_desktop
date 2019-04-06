@@ -1,0 +1,141 @@
+
+        private void getCategory(string ParentID)
+        {
+            try
+            {
+                tpMenu.Controls.Remove(pnlMainMenu);
+                this.drawPanelMenu("pnlMainMenu");
+
+                objENTCategoryMaster.Mode = "GetAddCategoryProduct";
+                objENTCategoryMaster.ParentID = new Guid(ParentID);
+                lstCategoryMaster = objDALCategoryMaster.getDisplayCategoryButton(objENTCategoryMaster);
+
+                int pnl_width = 0;
+                int x = 0;
+                int y = 12;
+                int i = 0;
+                int col = 0;
+                double row = 0;
+                int lstCount = lstCategoryMaster.Count;
+                int lstCatProdCount = 0;
+
+                for (int n = 0; n < lstCategoryMaster.Count - 1; n++)
+                {
+                    if (lstCategoryMaster[i].IsCategory == 0 && IsAddProduct == false)
+                    { lstCount += 1; IsAddProduct = true; lstCatProdCount += 1; }
+
+                    if (lstCategoryMaster[i].IsCategory == 1 && IsAddCategory == false)
+                    { lstCount += 1; IsAddCategory = true; lstCatProdCount += 1; }
+                }
+                
+                if (pnlMainMenu.Width > 525)
+                {
+                    col = 4;
+                    pnl_width = (pnlMainMenu.Width - 498) / 2;
+                    if (lstCount <= col)
+                        row = 1;
+                    else
+                        row = Math.Round(Convert.ToDouble(lstCount) / col, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    col = 3;
+                    pnl_width = (pnlMainMenu.Width - 372) / 2;
+                    if (lstCount <= col)
+                        row = 1;
+                    else
+                        row = Math.Round(Convert.ToDouble(lstCount) / col, 2, MidpointRounding.AwayFromZero);
+                }
+
+                for (int h = 0; h < row; h++)
+                {
+                    x = pnl_width;
+                    for (int v = 0; v < col; v++)
+                    {
+                        //if (i == lstCount - 1)
+                        //{
+                        //    if (IsAddCategory)
+                        //    {
+                        //        Button AddCat = new Button();
+                        //        AddCat.Location = new Point(x, y);
+                        //        AddCat.Click += new EventHandler(AddCatClickOneEvent);
+                        //        AddCat.Tag = ParentID;
+                        //        AddCat.Text = "Add Category";
+                        //        AddCat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)))));
+                        //        AddCat.Size = new System.Drawing.Size(120, 100);
+                        //        AddCat.BackColor = Color.Black; //Color.FromArgb(9, 89, 79);
+                        //        AddCat.Font = new Font("Microsoft Sans Serif", 11);
+                        //        AddCat.ForeColor = Color.White;
+                        //        AddCat.FlatStyle = FlatStyle.Flat;
+                        //        AddCat.Font = new Font(AddCat.Font, FontStyle.Bold);
+                        //        pnlMainMenu.Controls.Add(AddCat);
+                        //        if (IsAddCategory == false)
+                        //        { break; }
+                        //        IsAddCategory = false;
+                        //    }
+                        //    else if (IsAddCategory)
+                        //    {
+                        //        Button AddProduct = new Button();
+                        //        AddProduct.Location = new Point(x, y);
+                        //        AddProduct.Click += new EventHandler(AddProductClickOneEvent);
+                        //        AddProduct.Tag = ParentID;
+                        //        AddProduct.Text = "Add Product";
+                        //        AddProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)))));
+                        //        AddProduct.Size = new System.Drawing.Size(120, 100);
+                        //        AddProduct.BackColor = Color.Black; //Color.FromArgb(9, 89, 79);
+                        //        AddProduct.Font = new Font("Microsoft Sans Serif", 11);
+                        //        AddProduct.ForeColor = Color.White;
+                        //        AddProduct.FlatStyle = FlatStyle.Flat;
+                        //        AddProduct.Font = new Font(AddProduct.Font, FontStyle.Bold);
+                        //        pnlMainMenu.Controls.Add(AddProduct);
+                        //        if (IsAddCategory == false)
+                        //        { break; }
+                        //        IsAddCategory = false;
+                        //    }                            
+                        //}
+                        if (i < lstCategoryMaster.Count)
+                        {
+                            Button button = new Button();
+                            button.Location = new Point(x, y);
+                            button.Click += new EventHandler(ButtonClickOneEvent);
+                            button.Tag = lstCategoryMaster[i].CategoryID;
+                            button.Text = lstCategoryMaster[i].CategoryName;
+                            button.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)))));
+                            button.Size = new System.Drawing.Size(120, 100);
+                            if (lstCategoryMaster[i].IsCategory == 0)
+                            {
+                                button.BackColor = Color.Green; // Color for Product
+                                button.Text = button.Text;  // + "\n Rs. " + lstCategoryMaster[i].Price;
+                            }
+                            else if (lstCategoryMaster[i].IsCategory == 2)
+                            {
+                                button.BackColor = Color.Black; // Color for Product
+                                button.Text = button.Text;  // + "\n Rs. " + lstCategoryMaster[i].Price;
+                            }
+                            else if (lstCategoryMaster[i].IsCategory == 3)
+                            {
+                                button.BackColor = Color.Black; // Color for Product
+                                button.Text = button.Text;  // + "\n Rs. " + lstCategoryMaster[i].Price;
+                            }
+                            else
+                            {
+                                button.BackColor = Color.FromArgb(58, 173, 158); //Color.Teal;  //DarkOrange; // Color for Category
+                            }
+                            button.Font = new Font("Microsoft Sans Serif", 11);
+                            button.ForeColor = Color.White;
+                            button.FlatStyle = FlatStyle.Flat;
+                            button.Font = new Font(button.Font, FontStyle.Bold);
+                            pnlMainMenu.Controls.Add(button);
+                        }                                                
+                        i++;
+                        x = x + 126;
+                    }
+                    y = y + 106;
+                }
+                itemCount += 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), "Add Menu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
