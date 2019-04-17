@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADD_DEVICE_601.cs" />
     <Compile Include="APIStream.cs" />
     <Compile Include="BranchMasterSetting.cs" />
     <Compile Include="BranchSettingDetail.cs" />

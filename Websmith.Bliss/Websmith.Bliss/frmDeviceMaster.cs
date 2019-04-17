@@ -86,6 +86,54 @@ namespace Websmith.Bliss
             }
         }
 
+        private void SendDeviceToTab()
+        {
+            try
+            {
+                List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
+                lstENT = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode= "GetByTypeID", DeviceTypeID = (int)GlobalVariable.DeviceType.POS });
+
+                List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
+                ENT.DevicesList objDevicesList = new ENT.DevicesList();
+                foreach (ENT.DeviceMaster item in lstENT)
+                {
+                    lstDevice.Add(new ENT.AddDevice
+                    {
+                        guId = item.DeviceID.ToString(),
+                        ip = item.DeviceIP,
+                        station = "POS",
+                        stationname = item.DeviceName,
+                        status = item.DeviceStatus,
+                        type = Convert.ToInt32(item.DeviceTypeID)
+                    });
+                }
+
+                objDevicesList.addDevices = lstDevice;
+
+                ENT.ADD_DEVICE_601 objADDDEVICE = new ENT.ADD_DEVICE_601();
+                objADDDEVICE.ackGuid = Guid.NewGuid().ToString();
+                objADDDEVICE.ipAddress = GlobalVariable.getSystemIP();
+                objADDDEVICE.syncCode = ENT.SyncCode.C_ADD_DEVICE;
+                objADDDEVICE.Object = objDevicesList;
+
+                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster();
+                objSyncMaster.SyncCode = ENT.SyncCode.C_ADD_DEVICE;
+                objSyncMaster.batchCode = objADDDEVICE.ackGuid;
+                objSyncMaster.date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+                objSyncMaster.id = Guid.NewGuid().ToString();
+                objADDDEVICE.syncMaster = objSyncMaster;
+
+                if (AsynchronousClient.connected)
+                {
+                    AsynchronousClient.Send(Newtonsoft.Json.JsonConvert.SerializeObject(objADDDEVICE));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), "Device Type Master", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void frmDeviceMaster_Load(object sender, EventArgs e)
         {
             ClearData();
@@ -134,6 +182,7 @@ namespace Websmith.Bliss
 
                 if (objDAL.InsertUpdateDeleteDeviceMaster(objENT))
                 {
+                    SendDeviceToTab();
                     ClearData();
                     MessageBox.Show("Device saved successfully.", "Device Type Master", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

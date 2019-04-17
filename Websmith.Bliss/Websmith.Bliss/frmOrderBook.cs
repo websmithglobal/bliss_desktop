@@ -743,7 +743,7 @@ namespace Websmith.Bliss
                         lstItemList[n].ingredientses = lstIngredientsList;
                     }
                 }
-
+                
                 objNEWORDER.Object = lstENTOrder;
 
                 if (AsynchronousClient.connected)

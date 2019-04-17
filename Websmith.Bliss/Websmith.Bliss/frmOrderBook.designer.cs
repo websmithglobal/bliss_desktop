@@ -2701,7 +2701,6 @@
             this.panel59.Name = "panel59";
             this.panel59.Size = new System.Drawing.Size(155, 61);
             this.panel59.TabIndex = 36;
-            this.panel59.Visible = false;
             // 
             // clientConsole
             // 
@@ -3219,7 +3218,6 @@
             this.panel58.Name = "panel58";
             this.panel58.Size = new System.Drawing.Size(155, 61);
             this.panel58.TabIndex = 35;
-            this.panel58.Visible = false;
             // 
             // serverConsole
             // 

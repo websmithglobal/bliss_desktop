@@ -5,5 +5,8 @@
     <Setting Name="PrinterPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">EPSON TM-m30 Receipt</Value>
     </Setting>
+    <Setting Name="Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9091</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

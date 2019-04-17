@@ -125,15 +125,9 @@ namespace Websmith.Bliss
             }
         }
 
-        private delegate void SetControlPropertyThreadSafeDelegate(
-                System.Windows.Forms.Control control,
-                string propertyName,
-                object propertyValue);
+        private delegate void SetControlPropertyThreadSafeDelegate(System.Windows.Forms.Control control,string propertyName,object propertyValue);
 
-        public static void SetControlPropertyThreadSafe(
-            Control control,
-            string propertyName,
-            object propertyValue)
+        public static void SetControlPropertyThreadSafe(Control control, string propertyName, object propertyValue)
         {
             if (control.InvokeRequired)
             {

@@ -11,7 +11,7 @@ namespace Websmith.Bliss
     class AsynchronousServer
     {
         public static int bufferSize = 1024;
-        public static int port = 9091;
+        public static int port = Properties.Settings.Default.Port;
         public static IPAddress ipAddress;
 
         public static bool runningServer = false;

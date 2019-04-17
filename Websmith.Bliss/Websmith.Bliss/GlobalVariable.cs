@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ENT = Websmith.Entity;
 using DAL = Websmith.DataLayer;
+using System.Net;
 
 namespace Websmith.Bliss
 {
@@ -428,7 +429,32 @@ namespace Websmith.Bliss
                 MessageBox.Show(ex.Message.ToString());
             }
         }
-        
+
+        public static string getSystemIP()
+        {
+            string IP = "";
+            try
+            {
+                string strHostName = "";
+                strHostName = System.Net.Dns.GetHostName();
+                IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
+                IPAddress[] addr = ipEntry.AddressList;
+                if (addr.Length > 2)
+                {
+                    IP = addr[2].ToString();
+                }
+                else
+                {
+                    IP = addr[1].ToString();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Internet connection problem.", "Branch Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return IP;
+        }
+
     }
 
     public sealed class APIStream
