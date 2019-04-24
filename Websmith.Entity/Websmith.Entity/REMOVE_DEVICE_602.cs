@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Websmith.Entity
 {
-    public class ADD_DEVICE_601
+    public class REMOVE_DEVICE_602
     {
         /// <summary>
         /// New GUID
@@ -18,34 +18,31 @@ namespace Websmith.Entity
         public string ipAddress { get; set; }
 
         /// <summary>
+        /// Remove Devices list object
+        /// </summary>
+        public RemoveDevicesList Object { get; set; }
+
+        /// <summary>
         /// Predefined sync code
         /// </summary>
         public int syncCode { get; set; }
-
-        /// <summary>
-        /// Device list object
-        /// </summary>
-        public DevicesList Object { get; set; }
-
-        /// <summary>
-        /// Sync master data object
-        /// </summary>
-        public SyncMaster syncMaster { get; set; }
     }
 
-    public class Device
+    public class RemoveDevice
     {
-        public string guId { get; set; }
+        /// <summary>
+        /// device id
+        /// </summary>
+        public string id { get; set; }
+
+        /// <summary>
+        /// Device IP
+        /// </summary>
         public string ip { get; set; }
-        public string lastSync { get; set; }
-        public string station { get; set; }
-        public string stationname { get; set; }
-        public int status { get; set; }
-        public int type { get; set; }
     }
 
-    public class DevicesList
+    public class RemoveDevicesList
     {
-        public List<Device> addDevices { get; set; }
+        public List<RemoveDevice> removeDevices { get; set; }
     }
 }

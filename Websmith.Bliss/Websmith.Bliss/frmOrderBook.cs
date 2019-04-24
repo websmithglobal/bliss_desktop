@@ -637,7 +637,7 @@ namespace Websmith.Bliss
                 {
                     AsynchronousServer.console = serverConsole;
                     AsynchronousClient.console = this.clientConsole;
-                    String Addr = lstENT[i].DeviceIP;
+                    String Addr = $"{ lstENT[i].DeviceIP}:{Properties.Settings.Default.Port}";
                     String[] split = Addr.Split(':');
                     if (split.Length == 2)
                     {
@@ -666,7 +666,7 @@ namespace Websmith.Bliss
                                 AsynchronousClient.console = this.clientConsole;
                                 AsynchronousClient.StartClient();
                             }
-                            catch (System.FormatException e2)
+                            catch (System.FormatException)
                             {
                                 MessageBox.Show("Invalid ip/port.", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
@@ -703,7 +703,7 @@ namespace Websmith.Bliss
                 objSyncMaster.id = Guid.NewGuid().ToString();
                 objNEWORDER.syncMaster = objSyncMaster;
 
-                List<ENT.Object> lstENTOrder = new List<ENT.Object>();
+                List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
                 ENT.OrderBook objENTOrder = new ENT.OrderBook();
                 objENTOrder.OrderID = new Guid(txtOrderId.Text);
                 objENTOrder.Mode = "GetRecordByOrderIDForSocket";

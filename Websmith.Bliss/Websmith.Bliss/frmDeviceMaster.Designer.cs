@@ -47,6 +47,7 @@
             this.DeviceType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DeviceTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DeviceStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DeviceLastSync = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvItem)).BeginInit();
             this.SuspendLayout();
@@ -69,7 +70,7 @@
             this.panel1.Controls.Add(this.label7);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(537, 99);
+            this.panel1.Size = new System.Drawing.Size(684, 99);
             this.panel1.TabIndex = 0;
             // 
             // btnDelete
@@ -79,7 +80,7 @@
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.Location = new System.Drawing.Point(426, 52);
+            this.btnDelete.Location = new System.Drawing.Point(573, 52);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(101, 38);
             this.btnDelete.TabIndex = 5;
@@ -93,7 +94,7 @@
             this.txtDeviceIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDeviceIP.Location = new System.Drawing.Point(120, 67);
             this.txtDeviceIP.Name = "txtDeviceIP";
-            this.txtDeviceIP.Size = new System.Drawing.Size(185, 23);
+            this.txtDeviceIP.Size = new System.Drawing.Size(326, 23);
             this.txtDeviceIP.TabIndex = 2;
             // 
             // label2
@@ -112,7 +113,7 @@
             this.cmbDeviceType.FormattingEnabled = true;
             this.cmbDeviceType.Location = new System.Drawing.Point(119, 8);
             this.cmbDeviceType.Name = "cmbDeviceType";
-            this.cmbDeviceType.Size = new System.Drawing.Size(185, 24);
+            this.cmbDeviceType.Size = new System.Drawing.Size(326, 24);
             this.cmbDeviceType.TabIndex = 0;
             // 
             // label1
@@ -132,7 +133,7 @@
             this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUpdate.ForeColor = System.Drawing.Color.White;
-            this.btnUpdate.Location = new System.Drawing.Point(320, 52);
+            this.btnUpdate.Location = new System.Drawing.Point(467, 52);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(101, 38);
             this.btnUpdate.TabIndex = 4;
@@ -146,7 +147,7 @@
             this.txtDeviceId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDeviceId.Location = new System.Drawing.Point(120, 38);
             this.txtDeviceId.Name = "txtDeviceId";
-            this.txtDeviceId.Size = new System.Drawing.Size(116, 23);
+            this.txtDeviceId.Size = new System.Drawing.Size(82, 23);
             this.txtDeviceId.TabIndex = 1;
             this.txtDeviceId.Visible = false;
             // 
@@ -157,7 +158,7 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(426, 8);
+            this.btnClose.Location = new System.Drawing.Point(573, 8);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(101, 38);
             this.btnClose.TabIndex = 6;
@@ -172,7 +173,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(320, 8);
+            this.btnSave.Location = new System.Drawing.Point(467, 8);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(101, 38);
             this.btnSave.TabIndex = 3;
@@ -186,7 +187,7 @@
             this.txtDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDeviceName.Location = new System.Drawing.Point(120, 38);
             this.txtDeviceName.Name = "txtDeviceName";
-            this.txtDeviceName.Size = new System.Drawing.Size(185, 23);
+            this.txtDeviceName.Size = new System.Drawing.Size(326, 23);
             this.txtDeviceName.TabIndex = 1;
             // 
             // label7
@@ -214,14 +215,15 @@
             this.DeviceIP,
             this.DeviceType,
             this.DeviceTypeID,
-            this.DeviceStatus});
+            this.DeviceStatus,
+            this.DeviceLastSync});
             this.dgvItem.Location = new System.Drawing.Point(12, 123);
             this.dgvItem.MultiSelect = false;
             this.dgvItem.Name = "dgvItem";
             this.dgvItem.ReadOnly = true;
             this.dgvItem.RowHeadersWidth = 30;
             this.dgvItem.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvItem.Size = new System.Drawing.Size(538, 362);
+            this.dgvItem.Size = new System.Drawing.Size(685, 362);
             this.dgvItem.TabIndex = 24;
             // 
             // DeviceID
@@ -261,13 +263,18 @@
             this.DeviceStatus.HeaderText = "Device Status";
             this.DeviceStatus.Name = "DeviceStatus";
             this.DeviceStatus.ReadOnly = true;
-            this.DeviceStatus.Visible = false;
+            // 
+            // DeviceLastSync
+            // 
+            this.DeviceLastSync.HeaderText = "Last Connected";
+            this.DeviceLastSync.Name = "DeviceLastSync";
+            this.DeviceLastSync.ReadOnly = true;
             // 
             // frmDeviceMaster
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(561, 497);
+            this.ClientSize = new System.Drawing.Size(708, 497);
             this.Controls.Add(this.dgvItem);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -309,5 +316,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DeviceType;
         private System.Windows.Forms.DataGridViewTextBoxColumn DeviceTypeID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DeviceStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DeviceLastSync;
     }
 }

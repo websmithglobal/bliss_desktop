@@ -11,6 +11,7 @@
     <AssemblyName>Websmith.Entity</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -43,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADD_DEVICE_601.cs" />
+    <Compile Include="ADD_DEVICE_603.cs" />
+    <Compile Include="ADD_DEVICE_REQUEST_604.cs" />
     <Compile Include="APIStream.cs" />
     <Compile Include="BranchMasterSetting.cs" />
     <Compile Include="BranchSettingDetail.cs" />
@@ -85,9 +90,12 @@
     <Compile Include="RecipeMasterData.cs" />
     <Compile Include="RecipeMasterDetail.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="REMOVE_DEVICE_602.cs" />
     <Compile Include="RightDetail.cs" />
     <Compile Include="RoleMasterDetail.cs" />
     <Compile Include="ManageOrder.cs" />
+    <Compile Include="SendData.cs" />
+    <Compile Include="SEND_MESSAGE_ACKNOWLEDGEMENT_605.cs" />
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />
     <Compile Include="ShiftWiseEmployee.cs" />
@@ -95,6 +103,9 @@
     <Compile Include="SubFeatureDetail.cs" />
     <Compile Include="SyncCode.cs" />
     <Compile Include="NEW_ORDER_101.cs" />
+    <Compile Include="SyncMaster.cs" />
+    <Compile Include="SyncMasterSave.cs" />
+    <Compile Include="SyncResponse.cs" />
     <Compile Include="TableMasterDetail.cs" />
     <Compile Include="TaxGroupDetail.cs" />
     <Compile Include="TillManage.cs" />

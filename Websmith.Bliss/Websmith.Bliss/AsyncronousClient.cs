@@ -5,6 +5,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 using System.Reflection;
+using BAL = Websmith.BusinessLayer;
+using ENT = Websmith.Entity;
+using System.IO;
 
 namespace Websmith.Bliss
 {
@@ -27,6 +30,7 @@ namespace Websmith.Bliss
         static Thread listenThread;
 
         public static bool keepConnection = false;
+        static BAL.ClientServerSocketResponse objResponse;
 
         public static void StartClient()
         {
@@ -76,6 +80,10 @@ namespace Websmith.Bliss
                             {
                                 response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
                                 SetControlPropertyThreadSafe(console, "Text", console.Text + "Server: " + response);
+
+                                WriteLog(response);
+                                //objResponse = new BAL.ClientServerSocketResponse();
+                                //objResponse.GetResponseJson(response);
                             }
                         }
                         catch (Exception e)
@@ -90,11 +98,8 @@ namespace Websmith.Bliss
                                 StartClient();
                         }
                     }
-
-
                 });
                 listenThread.Start();
-
             }
             catch (Exception e)
             {
@@ -146,5 +151,13 @@ namespace Websmith.Bliss
             }
         }
 
+        static void WriteLog(string content)
+        {
+            using (StreamWriter writer = new StreamWriter(Application.StartupPath + "/GetJson.txt", true))
+            {
+                writer.WriteLine($"Client: {content}");
+                writer.Close();
+            }
+        }
     }
 }

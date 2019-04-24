@@ -525,6 +525,10 @@
       <Project>{f73040b3-5149-4ebe-9761-55434dfd8fff}</Project>
       <Name>Websmith.Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Websmith.BusinessLayer\Websmith.BusinessLayer.csproj">
+      <Project>{af24d85b-8737-4f60-87bf-a2de21bbfe51}</Project>
+      <Name>Websmith.BusinessLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

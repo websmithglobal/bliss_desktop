@@ -52,7 +52,7 @@ namespace Websmith.Bliss
                         btnClient.Enabled = false;
                         btnDisconnect.Enabled = true;
                     }
-                    catch (System.FormatException e2)
+                    catch (System.FormatException)
                     {
                         MessageBox.Show("Invalid ip/port", "Socket", MessageBoxButtons.OK);
                     }
@@ -174,7 +174,7 @@ namespace Websmith.Bliss
                         AsynchronousClient.console = this.clientConsole;
                         AsynchronousClient.StartClient();
                     }
-                    catch (System.FormatException e2)
+                    catch (System.FormatException)
                     {
                         MessageBox.Show("Invalid ip/port", "Socket", MessageBoxButtons.OK);
                     }

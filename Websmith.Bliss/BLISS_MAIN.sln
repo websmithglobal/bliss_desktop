@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2019
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Websmith.Bliss", "Websmith.Bliss\Websmith.Bliss.csproj", "{BB19FD99-BF99-4B34-BBA2-A55102C8812F}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Websmith.DataLayer", "..\Websmith.DataLayer\Websmith.DataLayer\Websmith.DataLayer.csproj", "{843944A9-F3C8-4A75-BB67-4DAA68E4A4BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Websmith.KeyGenerater", "..\..\BONANZA\Websmith.KeyGenerater\Websmith.KeyGenerater.csproj", "{16E83BAF-19E9-4BA4-8B6A-4EC81C5BC5C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Websmith.BusinessLayer", "Websmith.BusinessLayer\Websmith.BusinessLayer.csproj", "{AF24D85B-8737-4F60-87BF-A2DE21BBFE51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{16E83BAF-19E9-4BA4-8B6A-4EC81C5BC5C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16E83BAF-19E9-4BA4-8B6A-4EC81C5BC5C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16E83BAF-19E9-4BA4-8B6A-4EC81C5BC5C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF24D85B-8737-4F60-87BF-A2DE21BBFE51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF24D85B-8737-4F60-87BF-A2DE21BBFE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF24D85B-8737-4F60-87BF-A2DE21BBFE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF24D85B-8737-4F60-87BF-A2DE21BBFE51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -93,11 +93,11 @@ namespace Websmith.Bliss
                 List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
                 lstENT = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode= "GetByTypeID", DeviceTypeID = (int)GlobalVariable.DeviceType.POS });
 
-                List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
+                List<ENT.Device> lstDevice = new List<ENT.Device>();
                 ENT.DevicesList objDevicesList = new ENT.DevicesList();
                 foreach (ENT.DeviceMaster item in lstENT)
                 {
-                    lstDevice.Add(new ENT.AddDevice
+                    lstDevice.Add(new ENT.Device
                     {
                         guId = item.DeviceID.ToString(),
                         ip = item.DeviceIP,

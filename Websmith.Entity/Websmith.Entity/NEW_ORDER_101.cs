@@ -89,7 +89,7 @@ namespace Websmith.Entity
         public int qty { get; set; } = 0;
     }
 
-    public class Object
+    public class OrderData
     {
         public string address { get; set; } = string.Empty;
         public int addressType { get; set; } = 0;
@@ -134,20 +134,31 @@ namespace Websmith.Entity
         public int ups_status { get; set; } = 0;
     }
 
-    public class SyncMaster
-    {
-        public int SyncCode { get; set; } = 0;
-        public string batchCode { get; set; } = string.Empty;
-        public string date { get; set; } = string.Empty;
-        public string id { get; set; } = string.Empty;
-    }
-
     public class NEW_ORDER_101
     {
+        /// <summary>
+        /// New GUID
+        /// </summary>
         public string ackGuid { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Self Ip Address
+        /// </summary>
         public string ipAddress { get; set; } = string.Empty;
-        public List<Object> Object { get; set; }
+
+        /// <summary>
+        /// List of order data
+        /// </summary>
+        public List<OrderData> Object { get; set; }
+
+        /// <summary>
+        /// Predefined sync code For communication identification
+        /// </summary>
         public int syncCode { get; set; } = 0;
+
+        /// <summary>
+        /// Sync Master Data
+        /// </summary>
         public SyncMaster syncMaster { get; set; }
     }
 }

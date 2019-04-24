@@ -113,9 +113,9 @@ namespace Websmith.DataLayer
             return lstENT;
         }
 
-        public List<ENT.Object> getOrderForSocket(ENT.OrderBook objENT)
+        public List<ENT.OrderData> getOrderForSocket(ENT.OrderBook objENT)
         {
-            List<ENT.Object> lstENT = new List<ENT.Object>();
+            List<ENT.OrderData> lstENT = new List<ENT.OrderData>();
             try
             {
                 sqlCMD = new SqlCommand();
@@ -129,7 +129,7 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@OrderDateFrom", objENT.OrderDateFrom);
                 sqlCMD.Parameters.AddWithValue("@OrderDateTo", objENT.OrderDateTo);
                 sqlCMD.Parameters.AddWithValue("@Mode", objENT.Mode);
-                lstENT = DBHelper.GetEntityList<ENT.Object>(sqlCMD);
+                lstENT = DBHelper.GetEntityList<ENT.OrderData>(sqlCMD);
             }
             catch (Exception)
             {

@@ -5,6 +5,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
+using BAL = Websmith.BusinessLayer;
+using ENT = Websmith.Entity;
+using System.IO;
 
 namespace Websmith.Bliss
 {
@@ -58,7 +61,7 @@ namespace Websmith.Bliss
                         {
                             Socket client = server.Accept();
                             clients.Add(new Client(client, clients.Count));
-                        }catch(SocketException e)
+                        }catch(SocketException)
                         {
                             runningServer = false;
                         }
@@ -146,6 +149,7 @@ namespace Websmith.Bliss
         private byte[] bytes = new byte[AsynchronousServer.bufferSize];
 
         static Thread chatThread;
+        static BAL.ClientServerSocketResponse objResponse;
 
         public Client(Socket client, int count)
         {
@@ -177,9 +181,13 @@ namespace Websmith.Bliss
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
                             frmSocketServer.SetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + client.RemoteEndPoint.ToString()  + "): " + response);
                             AsynchronousServer.Send(response, index);
+
+                            WriteLog(response);
+                            //objResponse = new BAL.ClientServerSocketResponse();
+                            //objResponse.GetResponseJson(response);
                         }
                     }
-                    catch (System.Net.Sockets.SocketException e)
+                    catch (System.Net.Sockets.SocketException)
                     {
                         connected = false;
                         AsynchronousServer.clients.Remove(index);
@@ -203,7 +211,14 @@ namespace Websmith.Bliss
             client.Close();
             this.connected = false;
         }
+
+        void WriteLog(string content)
+        {
+            using (StreamWriter writer = new StreamWriter(Application.StartupPath + "/GetJson.txt", true))
+            {
+                writer.WriteLine($"Server: {content}");
+                writer.Close();
+            }
+        }
     }
-
 }
-
