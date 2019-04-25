@@ -46,5 +46,17 @@ namespace Websmith.Bliss.Properties {
                 this["Port"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string brentClients {
+            get {
+                return ((string)(this["brentClients"]));
+            }
+            set {
+                this["brentClients"] = value;
+            }
+        }
     }
 }

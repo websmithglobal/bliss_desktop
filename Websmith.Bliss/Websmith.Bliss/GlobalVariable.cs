@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ENT = Websmith.Entity;
 using DAL = Websmith.DataLayer;
@@ -453,6 +450,15 @@ namespace Websmith.Bliss
                 MessageBox.Show("Internet connection problem.", "Branch Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return IP;
+        }
+
+        public static void WriteLog(string content)
+        {
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(Application.StartupPath, "SocketJsonLog.txt"), true))
+            {
+                writer.WriteLine($"Server: {content}");
+                writer.Close();
+            }
         }
 
     }
