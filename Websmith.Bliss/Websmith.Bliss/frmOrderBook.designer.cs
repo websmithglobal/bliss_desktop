@@ -280,6 +280,7 @@
             this.btnVendorMaster = new System.Windows.Forms.Button();
             this.panel58 = new System.Windows.Forms.Panel();
             this.serverConsole = new System.Windows.Forms.Label();
+            this.panel60 = new System.Windows.Forms.Panel();
             this.tblEditor = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btnInfo = new System.Windows.Forms.Button();
@@ -307,7 +308,6 @@
             this.txtSpecReqForOrder = new System.Windows.Forms.TextBox();
             this.lblSpecReqOrder = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.panel60 = new System.Windows.Forms.Panel();
             this.tcTable.SuspendLayout();
             this.tcRecentOrder.SuspendLayout();
             this.tpAll.SuspendLayout();
@@ -2697,6 +2697,7 @@
             // panel59
             // 
             this.panel59.AutoScroll = true;
+            this.panel59.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel59.Controls.Add(this.clientConsole);
             this.panel59.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel59.Location = new System.Drawing.Point(164, 405);
@@ -3214,6 +3215,7 @@
             // panel58
             // 
             this.panel58.AutoScroll = true;
+            this.panel58.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel58.Controls.Add(this.serverConsole);
             this.panel58.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel58.Location = new System.Drawing.Point(3, 405);
@@ -3228,6 +3230,16 @@
             this.serverConsole.Name = "serverConsole";
             this.serverConsole.Size = new System.Drawing.Size(0, 20);
             this.serverConsole.TabIndex = 8;
+            // 
+            // panel60
+            // 
+            this.panel60.AutoScroll = true;
+            this.panel60.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel60.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel60.Location = new System.Drawing.Point(325, 405);
+            this.panel60.Name = "panel60";
+            this.panel60.Size = new System.Drawing.Size(156, 61);
+            this.panel60.TabIndex = 37;
             // 
             // tblEditor
             // 
@@ -3561,15 +3573,6 @@
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "BLISS";
             this.notifyIcon1.Visible = true;
-            // 
-            // panel60
-            // 
-            this.panel60.AutoScroll = true;
-            this.panel60.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel60.Location = new System.Drawing.Point(325, 405);
-            this.panel60.Name = "panel60";
-            this.panel60.Size = new System.Drawing.Size(156, 61);
-            this.panel60.TabIndex = 37;
             // 
             // frmOrderBook
             // 
