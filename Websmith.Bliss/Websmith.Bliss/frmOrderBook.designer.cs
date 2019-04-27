@@ -307,6 +307,7 @@
             this.txtSpecReqForOrder = new System.Windows.Forms.TextBox();
             this.lblSpecReqOrder = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.panel60 = new System.Windows.Forms.Panel();
             this.tcTable.SuspendLayout();
             this.tcRecentOrder.SuspendLayout();
             this.tpAll.SuspendLayout();
@@ -2676,6 +2677,7 @@
             this.tableSettingMenu.Controls.Add(this.panel55, 1, 5);
             this.tableSettingMenu.Controls.Add(this.panel56, 2, 5);
             this.tableSettingMenu.Controls.Add(this.panel58, 0, 6);
+            this.tableSettingMenu.Controls.Add(this.panel60, 2, 6);
             this.tableSettingMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableSettingMenu.Location = new System.Drawing.Point(3, 3);
             this.tableSettingMenu.Name = "tableSettingMenu";
@@ -3560,6 +3562,15 @@
             this.notifyIcon1.Text = "BLISS";
             this.notifyIcon1.Visible = true;
             // 
+            // panel60
+            // 
+            this.panel60.AutoScroll = true;
+            this.panel60.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel60.Location = new System.Drawing.Point(325, 405);
+            this.panel60.Name = "panel60";
+            this.panel60.Size = new System.Drawing.Size(156, 61);
+            this.panel60.TabIndex = 37;
+            // 
             // frmOrderBook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3974,5 +3985,6 @@
         private System.Windows.Forms.Label serverConsole;
         private System.Windows.Forms.Panel panel59;
         private System.Windows.Forms.Label clientConsole;
+        private System.Windows.Forms.Panel panel60;
     }
 }

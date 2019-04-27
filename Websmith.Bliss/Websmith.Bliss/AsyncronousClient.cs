@@ -8,7 +8,6 @@ using System.Reflection;
 
 namespace Websmith.Bliss
 {
-    
     public class AsynchronousClient
     {
         static int bufferSize = 500000000; //1024; //max size in bytes of single income message
@@ -18,7 +17,7 @@ namespace Websmith.Bliss
         public static int port;
         public static IPAddress ipAddress;
 
-        public static Panel consoleContainer;  
+        public static Panel consoleContainer;
         public static Label console;
 
         public static Socket client;
@@ -32,7 +31,6 @@ namespace Websmith.Bliss
 
         public static void StartClient()
         {
-
             try
             {
                 //set text to console using local helper class to set text from another thread than the one it was created from
@@ -40,8 +38,7 @@ namespace Websmith.Bliss
 
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
-                client = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
+                client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 //create thread object that listens for messages from server while it is connected
                 listenThread = new Thread(() =>
@@ -97,11 +94,8 @@ namespace Websmith.Bliss
                                 StartClient();
                         }
                     }
-
-
                 });
                 listenThread.Start();
-
             }
             catch (Exception e)
             {
@@ -128,7 +122,8 @@ namespace Websmith.Bliss
         {
             connected = false;
             ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Disconnected from server\n");
-            if (client != null) { 
+            if (client != null)
+            {
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
             }
@@ -165,6 +160,5 @@ namespace Websmith.Bliss
             TestFormCotrolHelper.ControlInvike(consoleContainer, () => consoleContainer.VerticalScroll.Maximum = console.Size.Height + 20);
             TestFormCotrolHelper.ControlInvike(consoleContainer, () => consoleContainer.VerticalScroll.Value = consoleContainer.VerticalScroll.Maximum);
         }
-
     }
 }

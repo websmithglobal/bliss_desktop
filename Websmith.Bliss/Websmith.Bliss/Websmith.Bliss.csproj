@@ -101,6 +101,12 @@
   <ItemGroup>
     <Compile Include="AsynchronousServer.cs" />
     <Compile Include="AsyncronousClient.cs" />
+    <Compile Include="frmSocketTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSocketTest.designer.cs">
+      <DependentUpon>frmSocketTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmActivation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -364,7 +370,9 @@
     <Compile Include="PrintSalesReport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestFormCotrolHelper.cs" />
+    <EmbeddedResource Include="frmSocketTest.resx">
+      <DependentUpon>frmSocketTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmActivation.resx">
       <DependentUpon>frmActivation.cs</DependentUpon>
     </EmbeddedResource>
@@ -554,6 +562,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <Content Include="green.bmp" />
+    <Content Include="red.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

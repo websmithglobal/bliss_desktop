@@ -14,7 +14,7 @@ namespace Websmith.Bliss
     {
         public static int connectedCount = 0;
 
-        public static int bufferSize = 500000000; //1024 buffer size for messages
+        public static int bufferSize = 500000000; //1024; //buffer size for messages
         public static int port = Properties.Settings.Default.Port;
         public static IPAddress ipAddress;
 
@@ -59,7 +59,7 @@ namespace Websmith.Bliss
             }
 
             runningServer = true;
-           
+
             Console.WriteLine("Running = true;");
 
             String localIp = GetLocalIPAddress();
@@ -91,7 +91,7 @@ namespace Websmith.Bliss
                             bool contained = true;
 
                             contained = clients.ContainsKey(client.RemoteEndPoint.ToString().Split(':')[0]); //check if client is already in list
-                           
+
                             if (contained) //if client already in list, set new socket, and status to connected
                             {
                                 clients[client.RemoteEndPoint.ToString().Split(':')[0]].client = client;
@@ -104,7 +104,8 @@ namespace Websmith.Bliss
                                 connectedCount++;
                                 StoreData();
                             }
-                        }catch(System.Net.Sockets.SocketException e)
+                        }
+                        catch (System.Net.Sockets.SocketException)
                         {
                             runningServer = false;
                         }
@@ -131,7 +132,7 @@ namespace Websmith.Bliss
                 storeData += client.Key + "$"; //separate all ip adressed by '$'
             }
 
-            if(storeData.Length > 0)
+            if (storeData.Length > 0)
             {
                 storeData = storeData.Substring(0, storeData.Length - 1);
             }
@@ -139,7 +140,6 @@ namespace Websmith.Bliss
             Properties.Settings.Default.brentClients = storeData;
             Properties.Settings.Default.Save();
         }
-
 
         //send data to all clients, except for case when data is coming from another client, and "without" variable is index of this client. When "without" variable is -1 means is from server to all clients.
         public static void Send(String data, int without)
@@ -151,7 +151,7 @@ namespace Websmith.Bliss
                 data += "\n";
             }
             byte[] byteData = Encoding.ASCII.GetBytes(data);
-            foreach(KeyValuePair<string, Client> client in clients)
+            foreach (KeyValuePair<string, Client> client in clients)
             {
                 if (client.Value.index != without) //when "without" != -1, means that "without" is index of client that sent this message
                 {
@@ -162,7 +162,7 @@ namespace Websmith.Bliss
 
         public static void close() //disconnect all clients and server socket
         {
-         
+
             if (runningServer)
             {
                 try
@@ -176,7 +176,7 @@ namespace Websmith.Bliss
                         server.Close();
                         runningServer = false;
                         ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server closed\n");
-                    }      
+                    }
                 }
                 catch (Exception e)
                 {
@@ -200,15 +200,9 @@ namespace Websmith.Bliss
         }
 
         //helper methods to set form text from another thread
-        private delegate void ServerSetControlPropertyThreadSafeDelegate(
-              System.Windows.Forms.Control control,
-              string propertyName,
-              object propertyValue);
+        private delegate void ServerSetControlPropertyThreadSafeDelegate(System.Windows.Forms.Control control, string propertyName, object propertyValue);
 
-        public static void ServerSetControlPropertyThreadSafe(
-            Control control,
-            string propertyName,
-            object propertyValue)
+        public static void ServerSetControlPropertyThreadSafe(Control control, string propertyName, object propertyValue)
         {
             if (control.InvokeRequired)
             {
@@ -233,7 +227,6 @@ namespace Websmith.Bliss
 
     }
 
-
     //client class for instance in array
     class Client
     {
@@ -253,13 +246,14 @@ namespace Websmith.Bliss
         PictureBox itemStatus;
         Button itemDelete;
 
-        public Client(string key, Socket client, int count) 
+        public Client(string key, Socket client, int count)
         {
             this.key = key;
             this.client = client;
             this.index = count;
             FillList();
-            if (client != null) { //if client is created from server.accept() result, then start listen thread, otherwise means client is created without socket connection, from list of all connected/disconnected clients
+            if (client != null)
+            { //if client is created from server.accept() result, then start listen thread, otherwise means client is created without socket connection, from list of all connected/disconnected clients
                 AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "New client connected: " + client.RemoteEndPoint.ToString() + "  (" + index + ")" + "\n");
                 instanceClient();
             }
@@ -281,8 +275,8 @@ namespace Websmith.Bliss
                         //get message from connected client in bytes buffer
                         if (receivedBytes == 0) //if not bytes received means client lost connection
                         {
-                            AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): Lost connection" + "  (" + index + ")" +  "\n");
-                            client.Shutdown(SocketShutdown.Both);
+                            AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): Lost connection" + "  (" + index + ")" + "\n");
+                            //client.Shutdown(SocketShutdown.Both);
                             client.Close();
                             connected = false;
                             itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
@@ -290,12 +284,13 @@ namespace Websmith.Bliss
                         else //put buffer bytes in string
                         {
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
+                            GlobalVariable.WriteLog(response);
                             AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): " + response);
                             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
                             AsynchronousServer.Send(response, index);
                         }
                     }
-                    catch (System.Net.Sockets.SocketException e)
+                    catch (System.Net.Sockets.SocketException)
                     {
                         connected = false;
                         connected = false;
@@ -366,16 +361,16 @@ namespace Websmith.Bliss
             TestFormCotrolHelper.ControlInvike(AsynchronousServer.list, () => AsynchronousServer.list.Controls.Add(itemPanel));
         }
 
-
         public void close() //disconnect client
         {
-            if (connected) {
+            if (connected)
+            {
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
                 this.connected = false;
                 itemStatus.ImageLocation = "red.bmp"; //set disconnected image to list item
             }
-    }
+        }
 
         private void deleteClick(object sender, EventArgs e) // remove client from list, this function is triggered from "DELETE" button
         {

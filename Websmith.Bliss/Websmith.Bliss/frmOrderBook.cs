@@ -635,13 +635,15 @@ namespace Websmith.Bliss
 
                 for (int i = 0; i < lstENT.Count; i++)
                 {
-                    AsynchronousServer.console = serverConsole;
+                    AsynchronousServer.console = this.serverConsole;   //link forms for static usage
                     AsynchronousClient.console = this.clientConsole;
                     String Addr = $"{ lstENT[i].DeviceIP}:{Properties.Settings.Default.Port}";
                     String[] split = Addr.Split(':');
                     if (split.Length == 2)
                     {
-                        // Start Server
+                        //Start Server and connect to client with given port
+                        AsynchronousServer.consoleContainer = this.panel58;
+                        AsynchronousServer.list = this.panel60;   //link list of all connected clients
                         if (!AsynchronousServer.runningServer)
                         {
                             AsynchronousServer.port = Int32.Parse(split[1]);
@@ -660,10 +662,12 @@ namespace Websmith.Bliss
                         {
                             try
                             {
+                                //start client and connect to server with given ip and port
                                 AsynchronousClient.keepConnection = true;
                                 AsynchronousClient.ipAddress = IPAddress.Parse(split[0]);
                                 AsynchronousClient.port = Int32.Parse(split[1]);
                                 AsynchronousClient.console = this.clientConsole;
+                                AsynchronousClient.consoleContainer = this.panel59;
                                 AsynchronousClient.StartClient();
                             }
                             catch (System.FormatException)
@@ -4144,7 +4148,8 @@ namespace Websmith.Bliss
 
         private void btnSocketTest_Click(object sender, EventArgs e)
         {
-            frmSocketServer frmDM = new frmSocketServer();
+            //frmSocketServer frmDM = new frmSocketServer();
+            frmSocketTest frmDM = new frmSocketTest();
             frmDM.ShowDialog();
         }
 
@@ -4297,5 +4302,27 @@ namespace Websmith.Bliss
 
         #endregion
 
+    }
+
+    //helper class to modify form object property from another thread than the one from wich form was created
+    class TestFormCotrolHelper
+    {
+        delegate void UniversalVoidDelegate();
+
+        /// <summary>
+        /// Call form controll action from different thread
+        /// </summary>
+        public static void ControlInvike(Control control, Action function)
+        {
+            if (control.IsDisposed || control.Disposing)
+                return;
+
+            if (control.InvokeRequired)
+            {
+                control.Invoke(new UniversalVoidDelegate(() => ControlInvike(control, function)));
+                return;
+            }
+            function();
+        }
     }
 }

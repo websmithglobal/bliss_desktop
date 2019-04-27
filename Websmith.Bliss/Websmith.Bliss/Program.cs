@@ -16,6 +16,7 @@ namespace Websmith.Bliss
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new frmSocketServer());
+            //Application.Run(new frmSocketTest());
             Application.Run(new frmEmployeeLogin());
         }
     }
