@@ -2,38 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Websmith.Entity
 {
     public class ADD_DEVICE_601
     {
-        /// <summary>
-        /// New GUID
-        /// </summary>
         public string ackGuid { get; set; }
-
-        /// <summary>
-        /// Self IP Address
-        /// </summary>
         public string ipAddress { get; set; }
 
-        /// <summary>
-        /// Predefined sync code
-        /// </summary>
+        [JsonProperty(PropertyName = "Object")]
+        public AddDeviceList Object { get; set; }
+
         public int syncCode { get; set; }
-
-        /// <summary>
-        /// Device list object
-        /// </summary>
-        public DevicesList Object { get; set; }
-
-        /// <summary>
-        /// Sync master data object
-        /// </summary>
         public SyncMaster syncMaster { get; set; }
     }
 
-    public class Device
+    public class AddDevice
     {
         public string guId { get; set; }
         public string ip { get; set; }
@@ -44,8 +29,9 @@ namespace Websmith.Entity
         public int type { get; set; }
     }
 
-    public class DevicesList
+    public class AddDeviceList
     {
-        public List<Device> addDevices { get; set; }
+        public List<AddDevice> addDevices { get; set; }
     }
+  
 }

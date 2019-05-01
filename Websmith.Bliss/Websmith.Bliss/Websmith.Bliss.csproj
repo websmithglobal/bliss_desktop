@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="AsynchronousServer.cs" />
     <Compile Include="AsyncronousClient.cs" />
+    <Compile Include="ClientServerDataParsing.cs" />
     <Compile Include="frmSocketTest.cs">
       <SubType>Form</SubType>
     </Compile>

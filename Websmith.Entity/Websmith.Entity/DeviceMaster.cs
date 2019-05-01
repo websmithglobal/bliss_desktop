@@ -21,6 +21,8 @@ namespace Websmith.Entity
         private string _DeviceType;
         private int _DeviceTypeID;
         private int _DeviceStatus;
+        private string _DeviceStatusText;
+        private string _DeviceLastSync;
         private string _Mode;
         #endregion
 
@@ -56,11 +58,33 @@ namespace Websmith.Entity
             get { return _DeviceStatus; }
             set { _DeviceStatus = value; }
         }
+        public string DeviceStatusText
+        {
+            get {
+                if (_DeviceStatus == 0)
+                    _DeviceStatusText = "Deactive";
+                else if (_DeviceStatus == 1)
+                    _DeviceStatusText = "Disconnected";
+                else if (_DeviceStatus == 2)
+                    _DeviceStatusText = "Connected";
+                else
+                    _DeviceStatusText = "";
+
+                return _DeviceStatusText;
+            }
+            set { DeviceStatusText = value; }
+        }
+        public string DeviceLastSync
+        {
+            get { return _DeviceLastSync; }
+            set { _DeviceLastSync = value; }
+        }
         public string Mode
         {
             get { return _Mode; }
             set { _Mode = value; }
         }
+
         #endregion
     }
 }

@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADD_DEVICE_601.cs" />
-    <Compile Include="ADD_DEVICE_603.cs" />
+    <Compile Include="ADD_DEVICE_RESPONSE_603.cs" />
     <Compile Include="ADD_DEVICE_REQUEST_604.cs" />
     <Compile Include="APIStream.cs" />
     <Compile Include="BranchMasterSetting.cs" />

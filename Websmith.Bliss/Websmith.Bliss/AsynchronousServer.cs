@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using BAL = Websmith.BusinessLayer;
 
 namespace Websmith.Bliss
 {
@@ -96,7 +97,13 @@ namespace Websmith.Bliss
                             {
                                 clients[client.RemoteEndPoint.ToString().Split(':')[0]].client = client;
                                 clients[client.RemoteEndPoint.ToString().Split(':')[0]].instanceClient();
-                                ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client reconnected: " + client.RemoteEndPoint.ToString() + "  (" + clients[client.RemoteEndPoint.ToString().Split(':')[0]].index + ")" + "\n");
+                                try
+                                {
+                                    ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client reconnected: " + client.RemoteEndPoint.ToString() + "  (" + clients[client.RemoteEndPoint.ToString().Split(':')[0]].index + ")" + "\n");
+                                }
+                                catch (Exception)
+                                {
+                                }
                             }
                             else //if client not already in list set it as new client
                             {
@@ -264,6 +271,8 @@ namespace Websmith.Bliss
             this.connected = true;
             itemStatus.ImageLocation = "green.bmp"; //set connected image in clients list
 
+            new BAL.DeviceMaster().ChangeStatus(key, 2); // change device status to connected
+
             chatThread = new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
@@ -271,20 +280,27 @@ namespace Websmith.Bliss
                 {
                     try
                     {
-                        int receivedBytes = client.Receive(bytes);
+                        int receivedBytes = 0;
+                        try
+                        {
+                            receivedBytes = client.Receive(bytes);
+                        }
+                        catch (Exception){ }
+                       
                         //get message from connected client in bytes buffer
                         if (receivedBytes == 0) //if not bytes received means client lost connection
                         {
-                            AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): Lost connection" + "  (" + index + ")" + "\n");
-                            //client.Shutdown(SocketShutdown.Both);
-                            client.Close();
-                            connected = false;
-                            itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
+                            //AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): Lost connection" + "  (" + index + ")" + "\n");
+                            ////client.Shutdown(SocketShutdown.Both);
+                            //client.Close();
+                            //connected = false;
+                            //itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
+                            //new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
                         }
                         else //put buffer bytes in string
                         {
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
-                            GlobalVariable.WriteLog(response);
+                            new ClientServerDataParsing().GetResponseJson(response);
                             AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): " + response);
                             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
                             AsynchronousServer.Send(response, index);
@@ -295,6 +311,7 @@ namespace Websmith.Bliss
                         connected = false;
                         connected = false;
                         itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
+                        new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
                     }
                     Thread.Sleep(500);
                 }
@@ -351,6 +368,7 @@ namespace Websmith.Bliss
             itemDelete.Text = "DELETE";
             itemDelete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             itemDelete.Click += new System.EventHandler(deleteClick); //set function to "DELETE" click
+            itemDelete.Visible = false;  // delete button visible false
 
             itemPanel.Controls.Add(itemIndex);
             itemPanel.Controls.Add(itemStatus);
@@ -364,11 +382,12 @@ namespace Websmith.Bliss
         public void close() //disconnect client
         {
             if (connected)
-            {
+            {                
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
                 this.connected = false;
                 itemStatus.ImageLocation = "red.bmp"; //set disconnected image to list item
+                new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to connected
             }
         }
 

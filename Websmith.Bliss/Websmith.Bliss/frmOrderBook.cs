@@ -4153,6 +4153,24 @@ namespace Websmith.Bliss
             frmDM.ShowDialog();
         }
 
+        private void BtnAddRemoveDevice_Click(object sender, EventArgs e)
+        {
+            frmDeviceMaster frmDM = new frmDeviceMaster();
+            frmDM.ShowDialog();
+        }
+
+        private void BtnDeviceConnection_Click(object sender, EventArgs e)
+        {
+            pnlSocketCoonection.Visible = true;
+            tableSettingMenu.Visible = false;
+        }
+
+        private void BtnBackToSetting_Click(object sender, EventArgs e)
+        {
+            pnlSocketCoonection.Visible = false;
+            tableSettingMenu.Visible = true;
+        }
+
         #endregion
 
         #region Print Duplicate Order Receipt
@@ -4302,6 +4320,7 @@ namespace Websmith.Bliss
 
         #endregion
 
+       
     }
 
     //helper class to modify form object property from another thread than the one from wich form was created

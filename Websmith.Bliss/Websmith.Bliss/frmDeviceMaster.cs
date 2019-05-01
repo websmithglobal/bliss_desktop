@@ -16,6 +16,7 @@ namespace Websmith.Bliss
     {
         DAL.DeviceMaster objDAL = new DAL.DeviceMaster();
         ENT.DeviceMaster objENT = new ENT.DeviceMaster();
+
         string strMode;
 
         public frmDeviceMaster()
@@ -40,6 +41,13 @@ namespace Websmith.Bliss
                     dgvItem.Rows[i].Cells["DeviceIP"].Value = lstENT[i].DeviceIP.ToString();
                     dgvItem.Rows[i].Cells["DeviceType"].Value = lstENT[i].DeviceType.ToString();
                     dgvItem.Rows[i].Cells["DeviceTypeID"].Value = lstENT[i].DeviceTypeID.ToString();
+                    dgvItem.Rows[i].Cells["DeviceStatus"].Value = lstENT[i].DeviceStatusText.ToString();
+                    if(lstENT[i].DeviceStatusText.Contains("Connected"))
+                        dgvItem.Rows[i].Cells["DeviceStatus"].Style.ForeColor = Color.Green;
+                    else
+                        dgvItem.Rows[i].Cells["DeviceStatus"].Style.ForeColor = Color.Red;
+
+                    dgvItem.Rows[i].Cells["DeviceLastSync"].Value = lstENT[i].DeviceLastSync;
                 }
             }
             catch (Exception ex)
@@ -93,11 +101,11 @@ namespace Websmith.Bliss
                 List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
                 lstENT = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode= "GetByTypeID", DeviceTypeID = (int)GlobalVariable.DeviceType.POS });
 
-                List<ENT.Device> lstDevice = new List<ENT.Device>();
-                ENT.DevicesList objDevicesList = new ENT.DevicesList();
+                List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
+                //ENT.Object objDevicesList = new ENT.Object();
                 foreach (ENT.DeviceMaster item in lstENT)
                 {
-                    lstDevice.Add(new ENT.Device
+                    lstDevice.Add(new ENT.AddDevice
                     {
                         guId = item.DeviceID.ToString(),
                         ip = item.DeviceIP,
@@ -108,13 +116,12 @@ namespace Websmith.Bliss
                     });
                 }
 
-                objDevicesList.addDevices = lstDevice;
-
+                //objDevicesList.addDevices = lstDevice;
                 ENT.ADD_DEVICE_601 objADDDEVICE = new ENT.ADD_DEVICE_601();
                 objADDDEVICE.ackGuid = Guid.NewGuid().ToString();
                 objADDDEVICE.ipAddress = GlobalVariable.getSystemIP();
                 objADDDEVICE.syncCode = ENT.SyncCode.C_ADD_DEVICE;
-                objADDDEVICE.Object = objDevicesList;
+                //objADDDEVICE.Object = objDevicesList;
 
                 ENT.SyncMaster objSyncMaster = new ENT.SyncMaster();
                 objSyncMaster.SyncCode = ENT.SyncCode.C_ADD_DEVICE;
@@ -136,7 +143,18 @@ namespace Websmith.Bliss
 
         private void frmDeviceMaster_Load(object sender, EventArgs e)
         {
+            //Timer timer1 = new Timer
+            //{
+            //    Interval = 2000
+            //};
+            //timer1.Enabled = true;
+            //timer1.Tick += new System.EventHandler(OnTimerEvent);
             ClearData();
+        }
+
+        private void OnTimerEvent(object sender, EventArgs e)
+        {
+            getDataGrid();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
