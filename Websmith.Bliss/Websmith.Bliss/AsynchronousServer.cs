@@ -169,7 +169,6 @@ namespace Websmith.Bliss
 
         public static void close() //disconnect all clients and server socket
         {
-
             if (runningServer)
             {
                 try
@@ -300,10 +299,17 @@ namespace Websmith.Bliss
                         else //put buffer bytes in string
                         {
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
-                            new ClientServerDataParsing().GetResponseJson(response);
+                            var result = new ClientServerDataParsing().GetResponseJson(response);
                             AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): " + response);
                             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
-                            AsynchronousServer.Send(response, index);
+                            if (result.Item1)
+                            {
+                                AsynchronousServer.Send(result.Item2, index);
+                            }
+                            else
+                            {
+                                AsynchronousServer.Send(response, index);
+                            }
                         }
                     }
                     catch (System.Net.Sockets.SocketException)

@@ -130,15 +130,9 @@ namespace Websmith.Bliss
         }
 
         //helper methods to set form text from another thread
-        private delegate void ClientSetControlPropertyThreadSafeDelegate(
-                System.Windows.Forms.Control control,
-                string propertyName,
-                object propertyValue);
+        private delegate void ClientSetControlPropertyThreadSafeDelegate(System.Windows.Forms.Control control,string propertyName,object propertyValue);
 
-        public static void ClientSetControlPropertyThreadSafe(
-            Control control,
-            string propertyName,
-            object propertyValue)
+        public static void ClientSetControlPropertyThreadSafe(Control control,string propertyName,object propertyValue)
         {
             if (control.InvokeRequired)
             {

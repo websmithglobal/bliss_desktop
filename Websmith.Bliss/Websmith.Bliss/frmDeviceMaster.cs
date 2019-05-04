@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DAL = Websmith.DataLayer;
 using ENT = Websmith.Entity;
+using Newtonsoft.Json;
 
 namespace Websmith.Bliss
 {
@@ -130,9 +131,26 @@ namespace Websmith.Bliss
                 objSyncMaster.id = Guid.NewGuid().ToString();
                 objADDDEVICE.syncMaster = objSyncMaster;
 
-                if (AsynchronousClient.connected)
+                if (objADDDEVICE != null)
                 {
-                    AsynchronousClient.Send(Newtonsoft.Json.JsonConvert.SerializeObject(objADDDEVICE));
+                    ENT.ReceiveMessageData objENTRMD = new ENT.ReceiveMessageData
+                    {
+                        a_id = Guid.NewGuid(),
+                        msg_guid = new Guid(objADDDEVICE.ackGuid),
+                        client_ip = objADDDEVICE.ipAddress,
+                        message = JsonConvert.SerializeObject(objADDDEVICE),
+                        send_acknowledge_status = 0,
+                        Mode = "ADD"
+                    };
+                    using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
+                    {
+                        objDAL.InsertUpdateDeleteReceiveMessageData(objENTRMD);
+                    }
+                }
+
+                if (AsynchronousServer.runningServer)
+                {
+                    AsynchronousServer.Send(JsonConvert.SerializeObject(objADDDEVICE), -1);
                 }
             }
             catch (Exception ex)

@@ -371,6 +371,7 @@
     <Compile Include="PrintSalesReport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SyncMasterResponse.cs" />
     <EmbeddedResource Include="frmSocketTest.resx">
       <DependentUpon>frmSocketTest.cs</DependentUpon>
     </EmbeddedResource>

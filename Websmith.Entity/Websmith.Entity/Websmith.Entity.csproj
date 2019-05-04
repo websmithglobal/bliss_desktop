@@ -87,6 +87,7 @@
     <Compile Include="PrinterMapping.cs" />
     <Compile Include="ProductClassMasterDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveMessageData.cs" />
     <Compile Include="RecipeMasterData.cs" />
     <Compile Include="RecipeMasterDetail.cs" />
     <Compile Include="LoginResponse.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="RoleMasterDetail.cs" />
     <Compile Include="ManageOrder.cs" />
     <Compile Include="SendData.cs" />
+    <Compile Include="SendMessageAcknowledgement.cs" />
     <Compile Include="SEND_MESSAGE_ACKNOWLEDGEMENT_605.cs" />
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />

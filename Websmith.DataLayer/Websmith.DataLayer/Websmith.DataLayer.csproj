@@ -87,11 +87,13 @@
     <Compile Include="PrinterMapping.cs" />
     <Compile Include="ProductClassMasterDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveMessageData.cs" />
     <Compile Include="RecipeMasterData.cs" />
     <Compile Include="RecipeMasterDetail.cs" />
     <Compile Include="RightDetail.cs" />
     <Compile Include="RoleMasterDetail.cs" />
     <Compile Include="SecurityManager.cs" />
+    <Compile Include="SendMessageAcknowledgement.cs" />
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />
     <Compile Include="ShiftWiseEmployee.cs" />
