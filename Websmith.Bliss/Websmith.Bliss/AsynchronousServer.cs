@@ -308,7 +308,7 @@ namespace Websmith.Bliss
                             }
                             else
                             {
-                                AsynchronousServer.Send(response, index);
+                                //AsynchronousServer.Send(response, index);
                             }
                         }
                     }

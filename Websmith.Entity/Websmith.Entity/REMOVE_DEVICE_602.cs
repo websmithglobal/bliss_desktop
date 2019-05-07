@@ -8,10 +8,10 @@ namespace Websmith.Entity
 {
     public class REMOVE_DEVICE_602
     {
-        [JsonProperty(PropertyName ="Object")]
-        public RemoveDeviceList Object { get; set; }
         public string ackGuid { get; set; }
         public string ipAddress { get; set; }
+        [JsonProperty(PropertyName = "Object")]
+        public RemoveDeviceList Object { get; set; }
         public int syncCode { get; set; }
     }
 
@@ -25,5 +25,4 @@ namespace Websmith.Entity
     {
         public List<RemoveDevice> removeDevices { get; set; }
     }
-
 }

@@ -14,8 +14,8 @@ namespace Websmith.Bliss
     {
         public Tuple<bool, string, int> GetResponseJson(string stringJson)
         {
-            string newJson = string.Empty;
-            var result = new Tuple<bool, string, int>(false, newJson, 0);
+            string SendJson = string.Empty;
+            var result = new Tuple<bool, string, int>(false, SendJson, 0);
             try
             {
                 WriteLog(stringJson);
@@ -41,14 +41,12 @@ namespace Websmith.Bliss
                         }
                     }
                 }
-
-                string json = JsonConvert.SerializeObject(objJson);
-
+                string GetJson = string.Empty;
                 switch (objJson.syncCode)
                 {
                     case ENT.SyncCode.C_ADD_DEVICE:
-
-                        ENT.ADD_DEVICE_601 objAdd = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_601>(json);
+                        GetJson = JsonConvert.SerializeObject(objJson);
+                        ENT.ADD_DEVICE_601 objAdd = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_601>(GetJson);
                         foreach (ENT.AddDevice item in objAdd.Object.addDevices)
                         {
                             ENT.DeviceMaster objENT = new ENT.DeviceMaster
@@ -59,7 +57,6 @@ namespace Websmith.Bliss
                                 DeviceTypeID = item.type,
                                 DeviceStatus = item.status
                             };
-
                             using (DAL.DeviceMaster obj = new DAL.DeviceMaster())
                             {
                                 if (obj.getDuplicateDeviceByName(objENT) <= 0)
@@ -72,19 +69,17 @@ namespace Websmith.Bliss
                                         {
                                             msg_guid = objJson.ackGuid,
                                             client_ip = objJson.ipAddress,
-                                            message_data = json,
+                                            message_data = GetJson,
                                             message_send_status = 0,
                                             message_acknowledge_status = 0,
-                                            Mode="ADD"
+                                            Mode = "ADD"
                                         };
 
                                         using (DAL.SendMessageAcknowledgement objDAL = new DAL.SendMessageAcknowledgement())
                                         {
                                             if (objDAL.InsertUpdateDeleteSendMessageData(ackResponse))
                                             {
-                                                List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
-                                                ENT.DeviceMaster objDevice = new ENT.DeviceMaster { Mode = "GetByStatus", DeviceStatus = 2 };
-                                                lstENT = new DAL.DeviceMaster().getDeviceMaster(objDevice);
+                                                SendJson = SendConnectedDeviceToTab();
                                             }
                                         }
                                     }
@@ -95,16 +90,47 @@ namespace Websmith.Bliss
                                     if (obj.InsertUpdateDeleteDeviceMaster(objENT))
                                     {
                                         // Now Acknowledgement to tab
+                                        ENT.SendMessageAcknowledgement ackResponse = new ENT.SendMessageAcknowledgement
+                                        {
+                                            msg_guid = objJson.ackGuid,
+                                            client_ip = objJson.ipAddress,
+                                            message_data = GetJson,
+                                            message_send_status = 0,
+                                            message_acknowledge_status = 0,
+                                            Mode = "ADD"
+                                        };
 
+                                        using (DAL.SendMessageAcknowledgement objDAL = new DAL.SendMessageAcknowledgement())
+                                        {
+                                            if (objDAL.InsertUpdateDeleteSendMessageData(ackResponse))
+                                            {
+                                                SendJson = SendConnectedDeviceToTab();
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-
-                        result = new Tuple<bool, string, int>(true, newJson, 0);
+                        result = new Tuple<bool, string, int>(true, SendJson, 0);
                         break;
                     case ENT.SyncCode.C_REMOVE_DEVICE:
-                        ENT.REMOVE_DEVICE_602 objRemove = JsonConvert.DeserializeObject<ENT.REMOVE_DEVICE_602>(objJson.Object.ToString());
+                        GetJson = JsonConvert.SerializeObject(objJson);
+                        ENT.REMOVE_DEVICE_602 objRemove = JsonConvert.DeserializeObject<ENT.REMOVE_DEVICE_602>(GetJson);
+                        foreach (ENT.RemoveDevice RemoveItem in objRemove.Object.removeDevices)
+                        {
+                            ENT.DeviceMaster objENT = new ENT.DeviceMaster
+                            {
+                                DeviceID = new Guid(RemoveItem.id),
+                                Mode= "DELETE"
+                            };
+                            using (DAL.DeviceMaster objDAL = new DAL.DeviceMaster())
+                            {
+                                if (objDAL.InsertUpdateDeleteDeviceMaster(objENT))
+                                {
+                                    // Send Acknowledgement
+                                }
+                            }
+                        }
                         break;
                     case ENT.SyncCode.C_ADD_DEVICE_RESPONSE:
                         ENT.ADD_DEVICE_RESPONSE_603 objResponse = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_RESPONSE_603>(objJson.Object.ToString());
@@ -118,56 +144,48 @@ namespace Websmith.Bliss
             }
             catch (Exception)
             {
-                result = new Tuple<bool, string, int>(false, newJson, 0);
+                result = new Tuple<bool, string, int>(false, SendJson, 0);
             }
             return result;
         }
 
-        private void SendDeviceToTab()
+        private string SendConnectedDeviceToTab()
         {
+            string newJson = string.Empty;
             try
             {
                 List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
-                lstENT = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode = "GetByTypeID", DeviceTypeID = (int)GlobalVariable.DeviceType.POS });
+                lstENT = new DAL.DeviceMaster().getDeviceMaster(objENT: new ENT.DeviceMaster { Mode = "GetByStatus", DeviceStatus = 2, DeviceTypeID = Convert.ToInt32(GlobalVariable.DeviceType.POS) });
 
                 List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
-                //ENT.Object objDevicesList = new ENT.Object();
-                foreach (ENT.DeviceMaster item in lstENT)
+                ENT.AddDeviceList objDevicesList = new ENT.AddDeviceList();
+                foreach (ENT.DeviceMaster objItem in lstENT)
                 {
                     lstDevice.Add(new ENT.AddDevice
                     {
-                        guId = item.DeviceID.ToString(),
-                        ip = item.DeviceIP,
+                        guId = objItem.DeviceID.ToString(),
+                        ip = objItem.DeviceIP,
                         station = "POS",
-                        stationname = item.DeviceName,
-                        status = item.DeviceStatus,
-                        type = Convert.ToInt32(item.DeviceTypeID)
+                        stationname = objItem.DeviceName,
+                        status = objItem.DeviceStatus,
+                        type = Convert.ToInt32(objItem.DeviceTypeID)
                     });
                 }
 
-                //objDevicesList.addDevices = lstDevice;
-                ENT.ADD_DEVICE_601 objADDDEVICE = new ENT.ADD_DEVICE_601();
-                objADDDEVICE.ackGuid = Guid.NewGuid().ToString();
-                objADDDEVICE.ipAddress = GlobalVariable.getSystemIP();
-                objADDDEVICE.syncCode = ENT.SyncCode.C_ADD_DEVICE;
-                //objADDDEVICE.Object = objDevicesList;
+                objDevicesList.addDevices = lstDevice;
+                ENT.ADD_DEVICE_RESPONSE_603 obj603 = new ENT.ADD_DEVICE_RESPONSE_603();
+                obj603.ackGuid = Guid.NewGuid().ToString();
+                obj603.ipAddress = GlobalVariable.getSystemIP();
+                obj603.syncCode = ENT.SyncCode.C_ADD_DEVICE_RESPONSE;
+                obj603.Object = objDevicesList;
 
-                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster();
-                objSyncMaster.SyncCode = ENT.SyncCode.C_ADD_DEVICE;
-                objSyncMaster.batchCode = objADDDEVICE.ackGuid;
-                objSyncMaster.date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
-                objSyncMaster.id = Guid.NewGuid().ToString();
-                objADDDEVICE.syncMaster = objSyncMaster;
-
-                if (AsynchronousClient.connected)
-                {
-                    AsynchronousClient.Send(Newtonsoft.Json.JsonConvert.SerializeObject(objADDDEVICE));
-                }
+                newJson = JsonConvert.SerializeObject(obj603);
             }
             catch (Exception)
             {
-
+                return string.Empty;
             }
+            return newJson;
         }
 
         public static void WriteLog(string content)
