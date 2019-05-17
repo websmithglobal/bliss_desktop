@@ -7,7 +7,7 @@ namespace Websmith.Entity
 {
     public class ReceiveMessageData
     {
-        public Guid a_id { get; set; }
+        public Int64 a_id { get; set; }
         public Guid msg_guid { get; set; }
         public string client_ip { get; set; }
         public string message { get; set; }

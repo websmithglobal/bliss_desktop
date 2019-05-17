@@ -623,7 +623,7 @@ namespace Websmith.Bliss
         /// this function is used to start client and server when form load.
         /// this function called from frmOrderBook_Load event.
         /// </summary>
-        private void StartSocketServerClient()
+        public void StartSocketServerClient()
         {
             try
             {
@@ -681,6 +681,10 @@ namespace Websmith.Bliss
                         }
                     }
                 }
+                //if (AsynchronousServer.runningServer)
+                //{
+                //    AsynchronousServer.Send(ClientServerDataParsing.AddDeviceRequest(), -1);
+                //}
             }
             catch (Exception ex)
             {
@@ -754,14 +758,11 @@ namespace Websmith.Bliss
                 {
                     AsynchronousClient.Send(Newtonsoft.Json.JsonConvert.SerializeObject(objNEWORDER));
                 }
-                    
             }
             catch (Exception)
             {
-
                 throw;
             }
-            
         }
 
         private string getSystemIP()
@@ -1054,6 +1055,7 @@ namespace Websmith.Bliss
                             {
                                 Guid ProdId = new Guid(button.Tag.ToString());
                                 this.AddCartItem(ProdId);
+                                GetNewOrderDetailForSocket();
                             }
                         }
                     }

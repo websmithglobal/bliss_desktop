@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Websmith.Entity
 {
-    class SEND_MESSAGE_ACKNOWLEDGEMENT_605
+    public class SEND_MESSAGE_ACKNOWLEDGEMENT_605
     {
         public string ackGuid { get; set; }
         public string ipAddress { get; set; }

@@ -71,8 +71,7 @@ namespace Websmith.Bliss
             IPAddress ipAddress = IPAddress.Parse(localIp);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
-            server = new Socket(ipAddress.AddressFamily,
-                SocketType.Stream, ProtocolType.Tcp);
+            server = new Socket(ipAddress.AddressFamily,SocketType.Stream, ProtocolType.Tcp);
 
             server.Bind(localEndPoint);
             server.Listen(10);
@@ -218,12 +217,7 @@ namespace Websmith.Bliss
             }
             else
             {
-                control.GetType().InvokeMember(
-                    propertyName,
-                    BindingFlags.SetProperty,
-                    null,
-                    control,
-                    new object[] { propertyValue });
+                control.GetType().InvokeMember(propertyName,BindingFlags.SetProperty,null,control,new object[] { propertyValue });
             }
 
             //get new console height and set scroll to bottom, using helper class to do this, because this is usually called from another thread (listenThreadClass)
@@ -325,7 +319,6 @@ namespace Websmith.Bliss
 
             chatThread.Start();
         }
-
 
         public void Send(byte[] byteData) //send data to client
         {

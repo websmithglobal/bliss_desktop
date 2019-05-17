@@ -103,7 +103,7 @@ namespace Websmith.Bliss
                 lstENT = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode= "GetByTypeID", DeviceTypeID = (int)GlobalVariable.DeviceType.POS });
 
                 List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
-                //ENT.Object objDevicesList = new ENT.Object();
+                ENT.AddDeviceList objDevicesList = new ENT.AddDeviceList();
                 foreach (ENT.DeviceMaster item in lstENT)
                 {
                     lstDevice.Add(new ENT.AddDevice
@@ -117,25 +117,27 @@ namespace Websmith.Bliss
                     });
                 }
 
-                //objDevicesList.addDevices = lstDevice;
-                ENT.ADD_DEVICE_601 objADDDEVICE = new ENT.ADD_DEVICE_601();
-                objADDDEVICE.ackGuid = Guid.NewGuid().ToString();
-                objADDDEVICE.ipAddress = GlobalVariable.getSystemIP();
-                objADDDEVICE.syncCode = ENT.SyncCode.C_ADD_DEVICE;
-                //objADDDEVICE.Object = objDevicesList;
-
-                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster();
-                objSyncMaster.SyncCode = ENT.SyncCode.C_ADD_DEVICE;
-                objSyncMaster.batchCode = objADDDEVICE.ackGuid;
-                objSyncMaster.date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
-                objSyncMaster.id = Guid.NewGuid().ToString();
+                objDevicesList.addDevices = lstDevice;
+                ENT.ADD_DEVICE_601 objADDDEVICE = new ENT.ADD_DEVICE_601
+                {
+                    ackGuid = Guid.NewGuid().ToString(),
+                    ipAddress = GlobalVariable.getSystemIP(),
+                    syncCode = ENT.SyncCode.C_ADD_DEVICE,
+                    Object = objDevicesList
+                };
+                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster
+                {
+                    SyncCode = ENT.SyncCode.C_ADD_DEVICE,
+                    batchCode = objADDDEVICE.ackGuid,
+                    date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"),
+                    id = Guid.NewGuid().ToString()
+                };
                 objADDDEVICE.syncMaster = objSyncMaster;
 
                 if (objADDDEVICE != null)
                 {
                     ENT.ReceiveMessageData objENTRMD = new ENT.ReceiveMessageData
                     {
-                        a_id = Guid.NewGuid(),
                         msg_guid = new Guid(objADDDEVICE.ackGuid),
                         client_ip = objADDDEVICE.ipAddress,
                         message = JsonConvert.SerializeObject(objADDDEVICE),
@@ -144,9 +146,11 @@ namespace Websmith.Bliss
                     };
                     using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
                     {
-                        objDAL.InsertUpdateDeleteReceiveMessageData(objENTRMD);
+                        _ = objDAL.InsertUpdateDeleteReceiveMessageData(objENTRMD);
                     }
                 }
+
+                //new frmOrderBook().StartSocketServerClient();
 
                 if (AsynchronousServer.runningServer)
                 {

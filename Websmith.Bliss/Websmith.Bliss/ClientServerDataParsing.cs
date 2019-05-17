@@ -18,34 +18,33 @@ namespace Websmith.Bliss
             var result = new Tuple<bool, string, int>(false, SendJson, 0);
             try
             {
-                WriteLog(stringJson);
+                //WriteLog(stringJson);
                 stringJson = stringJson.Replace("object", "Object");
 
                 ENT.SyncGeneralJson objJson = JsonConvert.DeserializeObject<ENT.SyncGeneralJson>(stringJson);
 
                 // Sync Master Data Save
-                if (objJson.syncCode == ENT.SyncCode.C_ADD_DEVICE)
+                if (objJson.syncMaster != null)
                 {
-                    if (objJson.syncMaster != null)
+                    using (DAL.SyncMasterSave objDAL = new DAL.SyncMasterSave())
                     {
-                        using (DAL.SyncMasterSave objDAL = new DAL.SyncMasterSave())
+                        objDAL.InsertUpdateDeleteSyncMaster(objENT: new ENT.SyncMasterSave
                         {
-                            objDAL.InsertUpdateDeleteSyncMaster(new ENT.SyncMasterSave
-                            {
-                                Mode = "ADD",
-                                SYNC_MASTER_ID = Guid.NewGuid(),
-                                SYNC_MASTER_SYNC_CODE = Convert.ToString(objJson.syncCode),
-                                SYNC_MASTER_BATCH_CODE = new Guid(objJson.syncMaster.batchCode),
-                                SYNC_MASTER_DEVICE_IP = objJson.ipAddress.Trim()
-                            });
-                        }
+                            Mode = "ADD",
+                            SYNC_MASTER_ID = Guid.NewGuid(),
+                            SYNC_MASTER_SYNC_CODE = Convert.ToString(objJson.syncCode),
+                            SYNC_MASTER_BATCH_CODE = new Guid(objJson.syncMaster.batchCode),
+                            SYNC_MASTER_DEVICE_IP = objJson.ipAddress.Trim()
+                        });
                     }
                 }
+
                 string GetJson = string.Empty;
                 switch (objJson.syncCode)
                 {
                     case ENT.SyncCode.C_ADD_DEVICE:
                         GetJson = JsonConvert.SerializeObject(objJson);
+                        WriteLog($"ADD_DEVICE => {GetJson}");
                         ENT.ADD_DEVICE_601 objAdd = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_601>(GetJson);
                         foreach (ENT.AddDevice item in objAdd.Object.addDevices)
                         {
@@ -62,94 +61,108 @@ namespace Websmith.Bliss
                                 if (obj.getDuplicateDeviceByName(objENT) <= 0)
                                 {
                                     objENT.Mode = "ADD";
-                                    if (obj.InsertUpdateDeleteDeviceMaster(objENT))
-                                    {
-                                        // Now Acknowledgement to tab
-                                        ENT.SendMessageAcknowledgement ackResponse = new ENT.SendMessageAcknowledgement
-                                        {
-                                            msg_guid = objJson.ackGuid,
-                                            client_ip = objJson.ipAddress,
-                                            message_data = GetJson,
-                                            message_send_status = 0,
-                                            message_acknowledge_status = 0,
-                                            Mode = "ADD"
-                                        };
-
-                                        using (DAL.SendMessageAcknowledgement objDAL = new DAL.SendMessageAcknowledgement())
-                                        {
-                                            if (objDAL.InsertUpdateDeleteSendMessageData(ackResponse))
-                                            {
-                                                SendJson = SendConnectedDeviceToTab();
-                                            }
-                                        }
-                                    }
+                                    obj.InsertUpdateDeleteDeviceMaster(objENT);
                                 }
                                 else
                                 {
                                     objENT.Mode = "UPDATE";
-                                    if (obj.InsertUpdateDeleteDeviceMaster(objENT))
-                                    {
-                                        // Now Acknowledgement to tab
-                                        ENT.SendMessageAcknowledgement ackResponse = new ENT.SendMessageAcknowledgement
-                                        {
-                                            msg_guid = objJson.ackGuid,
-                                            client_ip = objJson.ipAddress,
-                                            message_data = GetJson,
-                                            message_send_status = 0,
-                                            message_acknowledge_status = 0,
-                                            Mode = "ADD"
-                                        };
-
-                                        using (DAL.SendMessageAcknowledgement objDAL = new DAL.SendMessageAcknowledgement())
-                                        {
-                                            if (objDAL.InsertUpdateDeleteSendMessageData(ackResponse))
-                                            {
-                                                SendJson = SendConnectedDeviceToTab();
-                                            }
-                                        }
-                                    }
+                                    obj.InsertUpdateDeleteDeviceMaster(objENT);
                                 }
                             }
                         }
+                        SendConnectedDeviceToClient();
+                        SendJson = SendMessageAcknowledgement(GetJson, objJson.ipAddress, objJson.ackGuid);
                         result = new Tuple<bool, string, int>(true, SendJson, 0);
                         break;
                     case ENT.SyncCode.C_REMOVE_DEVICE:
                         GetJson = JsonConvert.SerializeObject(objJson);
+                        WriteLog($"REMOVE_DEVICE => {GetJson}");
                         ENT.REMOVE_DEVICE_602 objRemove = JsonConvert.DeserializeObject<ENT.REMOVE_DEVICE_602>(GetJson);
                         foreach (ENT.RemoveDevice RemoveItem in objRemove.Object.removeDevices)
                         {
-                            ENT.DeviceMaster objENT = new ENT.DeviceMaster
-                            {
-                                DeviceID = new Guid(RemoveItem.id),
-                                Mode= "DELETE"
-                            };
                             using (DAL.DeviceMaster objDAL = new DAL.DeviceMaster())
                             {
-                                if (objDAL.InsertUpdateDeleteDeviceMaster(objENT))
-                                {
-                                    // Send Acknowledgement
-                                }
+                                objDAL.InsertUpdateDeleteDeviceMaster(objENT: new ENT.DeviceMaster { DeviceID = new Guid(RemoveItem.id), Mode = "DELETE" });
                             }
                         }
+                        SendJson = SendMessageAcknowledgement(GetJson, objRemove.ipAddress, objRemove.ackGuid);
+                        result = new Tuple<bool, string, int>(true, SendJson, 0);
                         break;
                     case ENT.SyncCode.C_ADD_DEVICE_RESPONSE:
-                        ENT.ADD_DEVICE_RESPONSE_603 objResponse = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_RESPONSE_603>(objJson.Object.ToString());
+                        GetJson = JsonConvert.SerializeObject(objJson);
+                        WriteLog($"ADD_DEVICE_RESPONSE => {GetJson}");
+                        ENT.ADD_DEVICE_RESPONSE_603 objResponse = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_RESPONSE_603>(GetJson);
                         break;
                     case ENT.SyncCode.C_ADD_DEVICE_REQUEST:
-                        ENT.ADD_DEVICE_REQUEST_604 objRequest = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_REQUEST_604>(objJson.Object.ToString());
+                        GetJson = JsonConvert.SerializeObject(objJson);
+                        WriteLog($"ADD_DEVICE_REQUEST => {GetJson}");
+                        ENT.ADD_DEVICE_REQUEST_604 objRequest = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_REQUEST_604>(GetJson);
                         break;
                     default:
                         break;
                 }
+
+                DeleteSyncMaster(objJson);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                WriteLog($"Error GetResponseJson => {ex.Message}");
                 result = new Tuple<bool, string, int>(false, SendJson, 0);
             }
             return result;
         }
 
-        private string SendConnectedDeviceToTab()
+        private static string SendMessageAcknowledgement(string message, string ip, string ackGuid)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (DAL.SendMessageAcknowledgement objDAL = new DAL.SendMessageAcknowledgement())
+                {
+                    if (objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageAcknowledgement { msg_guid = ackGuid, client_ip = ip, message_data = message, message_send_status = 1, message_acknowledge_status = 0, Mode = "ADD" }))
+                    {
+                        ENT.SEND_MESSAGE_ACKNOWLEDGEMENT_605 objSendAck605 = new ENT.SEND_MESSAGE_ACKNOWLEDGEMENT_605
+                        {
+                            ackGuid = Guid.NewGuid().ToString(), ipAddress = GlobalVariable.getSystemIP(), syncCode = ENT.SyncCode.C_SEND_MESSAGE_ACKNOWLEDGEMENT,
+                            Object = new ENT.ReceiverClient { guid = ackGuid, receiverClientIp = ip }
+                        };
+                        result = JsonConvert.SerializeObject(objSendAck605);
+                        WriteLog($"SEND_MESSAGE_ACKNOWLEDGEMENT => {result}");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                result = string.Empty;
+                WriteLog($"Error SendMessageAcknowledgement => {ex.Message}");
+            }
+            return result;
+        }
+
+        public static string AddDeviceRequest()
+        {
+            string result = string.Empty;
+            try
+            {
+                ENT.ADD_DEVICE_REQUEST_604 obj604 = new ENT.ADD_DEVICE_REQUEST_604
+                {
+                    ackGuid = Guid.NewGuid().ToString(),
+                    ipAddress = GlobalVariable.getSystemIP(),
+                    syncCode = ENT.SyncCode.C_ADD_DEVICE_REQUEST,
+                    Object = new ENT.AddDeviceList()
+                };
+                result = JsonConvert.SerializeObject(obj604);
+                WriteLog($"ADD_DEVICE_REQUEST => {result}");
+            }
+            catch (Exception ex)
+            {
+                result = string.Empty;
+                WriteLog($"Error AddDeviceRequest => {ex.Message}");
+            }
+            return result;
+        }
+
+        private static void SendConnectedDeviceToClient()
         {
             string newJson = string.Empty;
             try
@@ -180,21 +193,47 @@ namespace Websmith.Bliss
                 obj603.Object = objDevicesList;
 
                 newJson = JsonConvert.SerializeObject(obj603);
+                WriteLog($"SEND_ADD_DEVICE_RESPONSE => {newJson}");
+                AsynchronousServer.Send(newJson, -1);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return string.Empty;
+                WriteLog($"Error SendConnectedDeviceToClient=> {ex.Message}");
             }
-            return newJson;
         }
 
-        public static void WriteLog(string content)
+        private static void DeleteSyncMaster(ENT.SyncGeneralJson objJson)
         {
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "SocketJsonLog.txt"), true))
+            try
             {
-                writer.WriteLine($"Server: {content}");
-                writer.Close();
+                if (objJson.syncMaster != null && objJson != null)
+                {
+                    using (DAL.SyncMasterSave objDAL = new DAL.SyncMasterSave())
+                    {
+                        objDAL.InsertUpdateDeleteSyncMaster(new ENT.SyncMasterSave
+                        {
+                            Mode = "DELETE",
+                            SYNC_MASTER_SYNC_CODE = Convert.ToString(objJson.syncMaster.SyncCode),
+                            SYNC_MASTER_BATCH_CODE = new Guid(objJson.syncMaster.batchCode),
+                            SYNC_MASTER_DEVICE_IP = objJson.ipAddress.Trim()
+                        });
+                        WriteLog($"DELETE SYNC MASTER");
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                WriteLog($"Error DeleteSyncMaster => {ex.Message}");
+            }
+        }
+
+        private static void WriteLog(string content)
+        {
+            //using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "SocketJsonLog.txt"), true))
+            //{
+            //    writer.WriteLine($"{content}");
+            //    writer.Close();
+            //}
         }
     }
 }
