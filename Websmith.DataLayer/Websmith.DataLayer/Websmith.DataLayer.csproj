@@ -93,7 +93,7 @@
     <Compile Include="RightDetail.cs" />
     <Compile Include="RoleMasterDetail.cs" />
     <Compile Include="SecurityManager.cs" />
-    <Compile Include="SendMessageAcknowledgement.cs" />
+    <Compile Include="SendMessageData.cs" />
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />
     <Compile Include="ShiftWiseEmployee.cs" />

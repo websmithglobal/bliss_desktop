@@ -96,7 +96,7 @@
     <Compile Include="RoleMasterDetail.cs" />
     <Compile Include="ManageOrder.cs" />
     <Compile Include="SendData.cs" />
-    <Compile Include="SendMessageAcknowledgement.cs" />
+    <Compile Include="SendMessageData.cs" />
     <Compile Include="SEND_MESSAGE_ACKNOWLEDGEMENT_605.cs" />
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />

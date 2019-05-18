@@ -134,28 +134,32 @@ namespace Websmith.Bliss
                 };
                 objADDDEVICE.syncMaster = objSyncMaster;
 
-                if (objADDDEVICE != null)
-                {
-                    ENT.ReceiveMessageData objENTRMD = new ENT.ReceiveMessageData
-                    {
-                        msg_guid = new Guid(objADDDEVICE.ackGuid),
-                        client_ip = objADDDEVICE.ipAddress,
-                        message = JsonConvert.SerializeObject(objADDDEVICE),
-                        send_acknowledge_status = 0,
-                        Mode = "ADD"
-                    };
-                    using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
-                    {
-                        _ = objDAL.InsertUpdateDeleteReceiveMessageData(objENTRMD);
-                    }
-                }
+                // Send Add Device Json To All Connected devices
+                string sendJson = JsonConvert.SerializeObject(objADDDEVICE);
+                ClientServerDataParsing.SendJsonTo(sendJson, objADDDEVICE.ipAddress, objADDDEVICE.ackGuid);
+
+                //if (objADDDEVICE != null)
+                //{
+                //    ENT.ReceiveMessageData objENTRMD = new ENT.ReceiveMessageData
+                //    {
+                //        msg_guid = new Guid(objADDDEVICE.ackGuid),
+                //        client_ip = objADDDEVICE.ipAddress,
+                //        message = JsonConvert.SerializeObject(objADDDEVICE),
+                //        send_acknowledge_status = 0,
+                //        Mode = "ADD"
+                //    };
+                //    using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
+                //    {
+                //        _ = objDAL.InsertUpdateDeleteReceiveMessageData(objENTRMD);
+                //    }
+                //}
 
                 //new frmOrderBook().StartSocketServerClient();
 
-                if (AsynchronousServer.runningServer)
-                {
-                    AsynchronousServer.Send(JsonConvert.SerializeObject(objADDDEVICE), -1);
-                }
+                //if (AsynchronousServer.runningServer)
+                //{
+                //    AsynchronousServer.Send(JsonConvert.SerializeObject(objADDDEVICE), -1);
+                //}
             }
             catch (Exception ex)
             {

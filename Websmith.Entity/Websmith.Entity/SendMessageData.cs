@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Websmith.Entity
 {
-    public class SendMessageAcknowledgement
+    public class SendMessageData
     {
         public Int64 A_id { get; set; }
         public string msg_guid { get; set; }

@@ -150,7 +150,6 @@ namespace Websmith.Bliss
         //send data to all clients, except for case when data is coming from another client, and "without" variable is index of this client. When "without" variable is -1 means is from server to all clients.
         public static void Send(String data, int without)
         {
-
             if (without == -1)
             {
                 ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server: " + data + "\n");
@@ -160,6 +159,22 @@ namespace Websmith.Bliss
             foreach (KeyValuePair<string, Client> client in clients)
             {
                 if (client.Value.index != without) //when "without" != -1, means that "without" is index of client that sent this message
+                {
+                    client.Value.Send(byteData);
+                }
+            }
+        }
+
+        //this function created by kg for send data to specific client by ip
+        public static void SendToSpecificClient(String data, string client_ip)
+        {
+            ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server: " + data + "\n");
+            data += "\n";
+
+            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            foreach (KeyValuePair<string, Client> client in clients)
+            {
+                if (client.Key == client_ip)
                 {
                     client.Value.Send(byteData);
                 }
@@ -191,6 +206,7 @@ namespace Websmith.Bliss
 
         }
 
+        // Get ip address of current system
         private static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -293,17 +309,10 @@ namespace Websmith.Bliss
                         else //put buffer bytes in string
                         {
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
-                            var result = new ClientServerDataParsing().GetResponseJson(response);
+                            bool result = ClientServerDataParsing.GetJsonFrom(response);
                             AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): " + response);
                             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
-                            if (result.Item1)
-                            {
-                                AsynchronousServer.Send(result.Item2, index);
-                            }
-                            else
-                            {
-                                //AsynchronousServer.Send(response, index);
-                            }
+                            //AsynchronousServer.Send(response, index);   // comment by kg
                         }
                     }
                     catch (System.Net.Sockets.SocketException)

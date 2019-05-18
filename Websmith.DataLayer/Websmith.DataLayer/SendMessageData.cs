@@ -8,12 +8,12 @@ using ENT = Websmith.Entity;
 
 namespace Websmith.DataLayer
 {
-    public class SendMessageAcknowledgement : IDisposable
+    public class SendMessageData : IDisposable
     {
         SqlCommand sqlCMD;
         CRUDOperation objCRUD = new CRUDOperation();
 
-        public bool InsertUpdateDeleteSendMessageData(ENT.SendMessageAcknowledgement objENT)
+        public bool InsertUpdateDeleteSendMessageData(ENT.SendMessageData objENT)
         {
             bool row = false;
             try

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using ENT = Websmith.Entity;
 using System.Data.SqlClient;
 
@@ -24,6 +25,7 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@msg_guid", objENT.msg_guid);
                 sqlCMD.Parameters.AddWithValue("@client_ip", objENT.client_ip);
                 sqlCMD.Parameters.AddWithValue("@message", objENT.message);
+                sqlCMD.Parameters.AddWithValue("@send_acknowledge_status", objENT.send_acknowledge_status);
                 sqlCMD.Parameters.AddWithValue("@Mode", objENT.Mode);
                 row = objCRUD.InsertUpdateDelete(sqlCMD);
             }
@@ -36,6 +38,23 @@ namespace Websmith.DataLayer
                 sqlCMD.Connection.Close();
             }
             return row;
+        }
+
+        public int getDuplicateReceiveMessageData(ENT.ReceiveMessageData objENT)
+        {
+            int duplicateCount = 0;
+            try
+            {
+                sqlCMD = new SqlCommand();
+                sqlCMD.CommandText = "SELECT  * FROM [ReceiveMessageData] WHERE msg_guid='" + objENT.msg_guid + "' ";
+                DataTable dt = objCRUD.getDataTableByQuery(sqlCMD);
+                duplicateCount = dt.Rows.Count;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return duplicateCount;
         }
 
         #region IDisposable Support
