@@ -72,7 +72,24 @@ namespace Websmith.DataLayer
             try
             {
                 sqlCMD = new SqlCommand();
-                sqlCMD.CommandText = "SELECT  * FROM [DeviceMaster] WHERE (DeviceID<>'" + objENT.DeviceID + "' OR DeviceID='" + objENT.DeviceID + "') AND DeviceTypeID = '" + objENT.DeviceTypeID + "' AND DeviceName = '" + objENT.DeviceName + "'";
+                sqlCMD.CommandText = "SELECT  * FROM [DeviceMaster] WHERE (DeviceID<>'" + objENT.DeviceID + "' OR DeviceID='" + objENT.DeviceID + "') AND DeviceTypeID = " + objENT.DeviceTypeID + " AND DeviceName = '" + objENT.DeviceName + "'";
+                DataTable dt = objCRUD.getDataTableByQuery(sqlCMD);
+                duplicateCount = dt.Rows.Count;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return duplicateCount;
+        }
+
+        public int getDuplicateDeviceByIP(ENT.DeviceMaster objENT)
+        {
+            int duplicateCount = 0;
+            try
+            {
+                sqlCMD = new SqlCommand();
+                sqlCMD.CommandText = "SELECT  * FROM [DeviceMaster] WHERE DeviceTypeID = " + objENT.DeviceTypeID + " AND DeviceIP = '" + objENT.DeviceIP + "'";
                 DataTable dt = objCRUD.getDataTableByQuery(sqlCMD);
                 duplicateCount = dt.Rows.Count;
             }

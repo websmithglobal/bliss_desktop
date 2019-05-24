@@ -65,7 +65,6 @@ namespace Websmith.Bliss
                         try
                         {
                             int receivedBytes = client.Receive(bytes); //place brent response from server in bytes buffer
-
                             if (receivedBytes == 0)//means server connection is lost
                             {
                                 if (connected)

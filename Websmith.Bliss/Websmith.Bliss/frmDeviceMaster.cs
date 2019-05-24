@@ -268,10 +268,32 @@ namespace Websmith.Bliss
                 {
                     if (MessageBox.Show("Are you sure to delete this device.", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
+                        Guid deviceid = new Guid(dgvItem.Rows[dgvItem.CurrentRow.Index].Cells["DeviceID"].Value.ToString());
+                        string deviceip = dgvItem.Rows[dgvItem.CurrentRow.Index].Cells["DeviceIP"].Value.ToString();
+
                         objENT.Mode = "DELETE";
-                        objENT.DeviceID = new Guid(dgvItem.Rows[dgvItem.CurrentRow.Index].Cells["DeviceID"].Value.ToString());
+                        objENT.DeviceID = deviceid;
+
+                        List<ENT.DeviceMaster> lstDelete = new DAL.DeviceMaster().getDeviceMaster(new ENT.DeviceMaster { Mode = "GetByID", DeviceID = deviceid });
+
                         if (objDAL.InsertUpdateDeleteDeviceMaster(objENT))
                         {
+                            List<ENT.RemoveDevice> lstRD = new List<ENT.RemoveDevice>();
+                            ENT.REMOVE_DEVICE_602 objRemove = new ENT.REMOVE_DEVICE_602();
+                            objRemove.ackGuid = Guid.NewGuid().ToString(); ;
+                            objRemove.ipAddress = GlobalVariable.getSystemIP();
+                            objRemove.syncCode = ENT.SyncCode.C_REMOVE_DEVICE;
+                            foreach (ENT.DeviceMaster item in lstDelete)
+                            {
+                                lstRD.Add(new ENT.RemoveDevice { id = item.DeviceID.ToString(), ip = item.DeviceIP});
+                            }
+                            ENT.RemoveDeviceList objRDList = new ENT.RemoveDeviceList { removeDevices = lstRD };
+                            objRemove.Object= objRDList;
+
+                            // Send Remove Device Json To All Connected Devices
+                            string sendJson = JsonConvert.SerializeObject(objRemove);
+                            ClientServerDataParsing.SendJsonTo(sendJson, objRemove.ipAddress, objRemove.ackGuid);
+
                             ClearData();
                             MessageBox.Show("Device deleted successfully.", "Device Type Master", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }

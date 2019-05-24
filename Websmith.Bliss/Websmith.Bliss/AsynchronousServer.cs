@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using BAL = Websmith.BusinessLayer;
+using ENT = Websmith.Entity;
 
 namespace Websmith.Bliss
 {
@@ -51,10 +52,19 @@ namespace Websmith.Bliss
 
                 Console.WriteLine("split: " + split.Length);
 
-                for (int i = 0; i < split.Length; i++)// add all older clients to list
+                // this for loop code written by upwork client
+                //for (int i = 0; i < split.Length; i++)// add all older clients to list
+                //{
+                //    Console.WriteLine("add client");
+                //    clients.Add(split[i], new Client(split[i], null, connectedCount));
+                //    connectedCount++;
+                //}
+
+                // this foreach loop code written by kg
+                foreach (ENT.DeviceMaster obj in GlobalVariable.GetAllPOSDevice())
                 {
                     Console.WriteLine("add client");
-                    clients.Add(split[i], new Client(split[i], null, connectedCount));
+                    clients.Add(obj.DeviceIP, new Client(obj.DeviceIP, null, connectedCount));
                     connectedCount++;
                 }
             }
@@ -63,7 +73,7 @@ namespace Websmith.Bliss
 
             Console.WriteLine("Running = true;");
 
-            String localIp = GetLocalIPAddress();
+            String localIp = GlobalVariable.getSystemIP(); // GetLocalIPAddress();
 
             console.Text = "Connecting to " + localIp + ":" + port + "\n";
             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
@@ -125,7 +135,6 @@ namespace Websmith.Bliss
             });
 
             listenThread.Start();
-
         }
 
         //function to store clients for window exit/reload
@@ -152,7 +161,7 @@ namespace Websmith.Bliss
         {
             if (without == -1)
             {
-                ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server: " + data + "\n");
+                ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server Send: " + data + "\n");
                 data += "\n";
             }
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -162,6 +171,19 @@ namespace Websmith.Bliss
                 {
                     client.Value.Send(byteData);
                 }
+            }
+        }
+
+        //this function created by kg for send data to all connected clients
+        public static void SendToAllClient(String data, string ackGuid)
+        {
+            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            foreach (KeyValuePair<string, Client> client in clients)
+            {
+                client.Value.Send(byteData);
+                ClientServerDataParsing.SaveSendMessageData(data, client.Key, ackGuid);
+                ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server Send: " + client.Key + " => " + data + "\n");
+                //data += "\n";
             }
         }
 
@@ -279,7 +301,6 @@ namespace Websmith.Bliss
         {
             this.connected = true;
             itemStatus.ImageLocation = "green.bmp"; //set connected image in clients list
-
             new BAL.DeviceMaster().ChangeStatus(key, 2); // change device status to connected
 
             chatThread = new Thread(() =>
@@ -300,11 +321,11 @@ namespace Websmith.Bliss
                         if (receivedBytes == 0) //if not bytes received means client lost connection
                         {
                             //AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): Lost connection" + "  (" + index + ")" + "\n");
-                            ////client.Shutdown(SocketShutdown.Both);
+                            //client.Shutdown(SocketShutdown.Both);
                             //client.Close();
                             //connected = false;
-                            //itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
-                            //new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
+                            itemStatus.ImageLocation = "red.bmp"; //set disconnected image in clients list
+                            new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
                         }
                         else //put buffer bytes in string
                         {

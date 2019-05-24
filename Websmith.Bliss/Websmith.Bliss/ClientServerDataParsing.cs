@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ENT = Websmith.Entity;
 using DAL = Websmith.DataLayer;
-using System.Net;
 
 namespace Websmith.Bliss
 {
@@ -27,13 +23,14 @@ namespace Websmith.Bliss
                 {
                     //Receive acknowledgement for message
                     ENT.ReceiveMessageData objReceiveMessage = new ENT.ReceiveMessageData { msg_guid = new Guid(objJson.ackGuid), client_ip = objJson.ipAddress, message = stringJson, send_acknowledge_status = 0 };
-
+                    WriteLog($"ACK SYNC CODE: {objJson.syncCode}");
                     if (objJson.syncCode == ENT.SyncCode.C_SEND_MESSAGE_ACKNOWLEDGEMENT)
                     {
                         using (DAL.SendMessageData objDAL = new DAL.SendMessageData())
                         {
                             // this function update ack status 0 to 1
-                            objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = objReceiveMessage.msg_guid.ToString(), message_acknowledge_status = 1, Mode = "STATUS_ACK" });
+                            objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = objReceiveMessage.msg_guid.ToString(), client_ip = objReceiveMessage.client_ip, message_acknowledge_status = 1, Mode = "STATUS_ACK" });
+                            WriteLog($"Receive Ack ID {objReceiveMessage.msg_guid.ToString()} and IP {objReceiveMessage.client_ip}");
 
                             // this function delete all the record which ack status is 1 because it is non-use record
                             objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { Mode = "DELETE" });
@@ -108,7 +105,6 @@ namespace Websmith.Bliss
                 {
                     case ENT.SyncCode.C_ADD_DEVICE:
                         GetJson = JsonConvert.SerializeObject(objJson);
-                        //WriteLog($"ADD_DEVICE => {GetJson}");
                         ENT.ADD_DEVICE_601 objAdd = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_601>(GetJson);
                         foreach (ENT.AddDevice item in objAdd.Object.addDevices)
                         {
@@ -139,7 +135,6 @@ namespace Websmith.Bliss
                         break;
                     case ENT.SyncCode.C_REMOVE_DEVICE:
                         GetJson = JsonConvert.SerializeObject(objJson);
-                        //WriteLog($"REMOVE_DEVICE => {GetJson}");
                         ENT.REMOVE_DEVICE_602 objRemove = JsonConvert.DeserializeObject<ENT.REMOVE_DEVICE_602>(GetJson);
                         foreach (ENT.RemoveDevice RemoveItem in objRemove.Object.removeDevices)
                         {
@@ -152,23 +147,39 @@ namespace Websmith.Bliss
                         break;
                     case ENT.SyncCode.C_ADD_DEVICE_RESPONSE:
                         GetJson = JsonConvert.SerializeObject(objJson);
-                        //WriteLog($"ADD_DEVICE_RESPONSE => {GetJson}");
                         ENT.ADD_DEVICE_RESPONSE_603 objResponse = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_RESPONSE_603>(GetJson);
                         break;
                     case ENT.SyncCode.C_ADD_DEVICE_REQUEST:
                         GetJson = JsonConvert.SerializeObject(objJson);
-                        //WriteLog($"ADD_DEVICE_REQUEST => {GetJson}");
                         ENT.ADD_DEVICE_REQUEST_604 objRequest = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_REQUEST_604>(GetJson);
+                        ENT.DeviceMaster objENT604 = new ENT.DeviceMaster
+                        {
+                            DeviceID = Guid.NewGuid(),
+                            DeviceName = "POS",
+                            DeviceIP = objRequest.ipAddress.Trim(),
+                            DeviceTypeID = 1,
+                            DeviceStatus = 1
+                        };
+                        using (DAL.DeviceMaster obj = new DAL.DeviceMaster())
+                        {
+                            if (obj.getDuplicateDeviceByIP(objENT604) <= 0)
+                            {
+                                objENT604.Mode = "ADD";
+                                obj.InsertUpdateDeleteDeviceMaster(objENT604);
+                            }
+                        }
+                        SendMessageAcknowledgement(objRequest.ipAddress, objRequest.ackGuid);
                         break;
                     default:
                         break;
                 }
 
+                // delete sync master data which is non use
                 DeleteSyncMaster(objJson);
             }
             catch (Exception ex)
             {
-                WriteLog($"Error GetResponseJson => {ex.Message}");
+                WriteLog($"Error GetResponseJson => {ex.Message} => {stringJson}");
             }
             return true;
         }
@@ -177,16 +188,9 @@ namespace Websmith.Bliss
         {
             try
             {
-                using (DAL.SendMessageData objDAL = new DAL.SendMessageData())
+                if (AsynchronousServer.runningServer)
                 {
-                    if (objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = ackGuid, client_ip = ip, message_data = message, message_send_status = 1, message_acknowledge_status = 0, Mode = "ADD" }))
-                    {
-                        if (AsynchronousServer.runningServer)
-                        {
-                            WriteLog($"SendJsonTo => {message}");
-                            AsynchronousServer.Send(message, -1);
-                        }
-                    }
+                    AsynchronousServer.SendToAllClient(message, ackGuid);
                 }
             }
             catch (Exception ex)
@@ -232,8 +236,11 @@ namespace Websmith.Bliss
                     syncCode = ENT.SyncCode.C_ADD_DEVICE_REQUEST
                 };
                 result = JsonConvert.SerializeObject(obj604);
-                //SendJsonTo(result, obj604.ipAddress, obj604.ackGuid);
-                WriteLog($"ADD_DEVICE_REQUEST => {result}");
+                if (AsynchronousServer.runningServer)
+                {
+                    AsynchronousServer.Send(result, -1);
+                }
+                WriteLog($"ADD DEVICE REQUEST => {result}");
             }
             catch (Exception ex)
             {
@@ -274,7 +281,6 @@ namespace Websmith.Bliss
                 };
 
                 string newJson = JsonConvert.SerializeObject(obj603);
-                //WriteLog($"SEND_ADD_DEVICE_RESPONSE => {newJson}");
 
                 // Send Add Device Json To All Connected devices
                 SendJsonTo(newJson, obj603.ipAddress, obj603.ackGuid);
@@ -307,6 +313,24 @@ namespace Websmith.Bliss
             catch (Exception ex)
             {
                 WriteLog($"Error DeleteSyncMaster => {ex.Message}");
+            }
+        }
+
+        public static void SaveSendMessageData(string message, string ip, string ackGuid)
+        {
+            try
+            {
+                using (DAL.SendMessageData objDAL = new DAL.SendMessageData())
+                {
+                    if (objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = ackGuid, client_ip = ip, message_data = message, message_send_status = 1, message_acknowledge_status = 0, Mode = "ADD" }))
+                    {
+                        WriteLog($"Save Successfully => {ip} => {message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog($"Error SaveSendMessageData => {ip} => {ex.Message}");
             }
         }
 

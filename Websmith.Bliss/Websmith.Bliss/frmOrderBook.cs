@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using ENT = Websmith.Entity;
 using DAL = Websmith.DataLayer;
 
@@ -627,35 +628,51 @@ namespace Websmith.Bliss
         {
             try
             {
-                ENT.DeviceMaster objENT = new ENT.DeviceMaster();
-                List<ENT.DeviceMaster> lstENT = new List<ENT.DeviceMaster>();
-                objENT.Mode = "GetByTypeID";
-                objENT.DeviceTypeID = (int)GlobalVariable.DeviceType.POS;
-                lstENT = new DAL.DeviceMaster().getDeviceMaster(objENT);
+                #region Start Server
 
+                //Start Server and connect to client with given port
+                AsynchronousServer.console = this.serverConsole;   //link forms for static usage
+                AsynchronousServer.consoleContainer = this.panel58;
+                AsynchronousServer.list = this.panel60;   //link list of all connected clients
+                if (!AsynchronousServer.runningServer)
+                {
+                    AsynchronousServer.port = Convert.ToInt32(Properties.Settings.Default.Port);
+                    AsynchronousServer.StartListening();
+                }
+
+                #endregion
+
+                List<ENT.DeviceMaster> lstENT = GlobalVariable.GetAllPOSDevice();
                 for (int i = 0; i < lstENT.Count; i++)
                 {
-                    AsynchronousServer.console = this.serverConsole;   //link forms for static usage
-                    AsynchronousClient.console = this.clientConsole;
                     String Addr = $"{ lstENT[i].DeviceIP}:{Properties.Settings.Default.Port}";
                     String[] split = Addr.Split(':');
-                    if (split.Length == 2)
-                    {
-                        //Start Server and connect to client with given port
-                        AsynchronousServer.consoleContainer = this.panel58;
-                        AsynchronousServer.list = this.panel60;   //link list of all connected clients
-                        if (!AsynchronousServer.runningServer)
-                        {
-                            AsynchronousServer.port = Int32.Parse(split[1]);
-                            AsynchronousServer.StartListening();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Bad adress, only allowed ip:port combination.", "Bliss", MessageBoxButtons.OK);
-                    }
+
+                    #region Start Server Non Use
+
+                    //Start Server
+                    //if (split.Length == 2)
+                    //{
+                    //    //Start Server and connect to client with given port
+                    //    AsynchronousServer.consoleContainer = this.panel58;
+                    //    AsynchronousServer.list = this.panel60;   //link list of all connected clients
+                    //    if (!AsynchronousServer.runningServer)
+                    //    {
+                    //        AsynchronousServer.port = Int32.Parse(split[1]);
+                    //        AsynchronousServer.StartListening();
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show("Bad adress, only allowed ip:port combination.", "Bliss", MessageBoxButtons.OK);
+                    //}
+
+                    #endregion
+
+                    #region Start Client
 
                     // Start Client
+                    AsynchronousClient.console = this.clientConsole;
                     if (!AsynchronousClient.connected)
                     {
                         if (split.Length == 2)
@@ -680,11 +697,14 @@ namespace Websmith.Bliss
                             MessageBox.Show("Bad adress, only allowed ip:port combination", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
+
+                    #endregion
                 }
-                //if (AsynchronousServer.runningServer)
-                //{
-                //    AsynchronousServer.Send(ClientServerDataParsing.AddDeviceRequest(), -1);
-                //}
+
+                if (AsynchronousServer.runningServer)
+                {
+                    ClientServerDataParsing.AddDeviceRequest();
+                }
             }
             catch (Exception ex)
             {
@@ -754,9 +774,16 @@ namespace Websmith.Bliss
                 
                 objNEWORDER.Object = lstENTOrder;
 
-                if (AsynchronousClient.connected)
+                // This code is for send order json to single server as client
+                //if (AsynchronousClient.connected)
+                //{
+                //    AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
+                //}
+
+                // This code is for send order json to all connected client as server
+                if (AsynchronousServer.runningServer)
                 {
-                    AsynchronousClient.Send(Newtonsoft.Json.JsonConvert.SerializeObject(objNEWORDER));
+                    ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ipAddress, objNEWORDER.ackGuid);
                 }
             }
             catch (Exception)
@@ -4321,8 +4348,6 @@ namespace Websmith.Bliss
         }
 
         #endregion
-
-       
     }
 
     //helper class to modify form object property from another thread than the one from wich form was created

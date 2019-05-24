@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using ENT = Websmith.Entity;
 using DAL = Websmith.DataLayer;
 using System.Net;
+using System.Net.Sockets;
 
 namespace Websmith.Bliss
 {
@@ -45,6 +46,18 @@ namespace Websmith.Bliss
                 MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return lstENTGS;
+        }
+
+        public static List<ENT.DeviceMaster> GetAllPOSDevice()
+        {
+            try
+            {
+                return new DAL.DeviceMaster().getDeviceMaster(objENT: new ENT.DeviceMaster { Mode = "GetByTypeID", DeviceTypeID = (int)DeviceType.POS });
+            }
+            catch (Exception)
+            {
+                return new List<ENT.DeviceMaster>();
+            }
         }
 
         public enum DeliveryType
@@ -397,29 +410,6 @@ namespace Websmith.Bliss
                         btn.Font = new Font(btn.Font, FontStyle.Bold);
                     }
                 }
-
-                //List<Control> allPnl = new List<Control>();
-                //foreach (Panel pnl in FindControlRecursive(allPnl, frm, typeof(Panel)))
-                //{
-                //    // code for panel
-                //    pnl.BackColor = Color.Teal;
-
-                //    // code for all label
-                //    List<Control> allPnlLbl = new List<Control>();
-                //    foreach (Label pnllbl in FindControlRecursive(allPnlLbl, pnl, typeof(Label)))
-                //    {
-                //        pnllbl.ForeColor = Color.White;
-                //    }
-
-                //    // code for only panel button
-                //    List<Control> allPnlBtn = new List<Control>();
-                //    foreach (Button pnlbtn in FindControlRecursive(allPnlBtn, pnl, typeof(Button)))
-                //    {
-                //        pnlbtn.BackColor = Color.OrangeRed;    // HotTrack
-                //        pnlbtn.ForeColor = Color.White;
-                //        pnlbtn.FlatStyle = FlatStyle.Flat;
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -451,6 +441,19 @@ namespace Websmith.Bliss
             }
             return IP;
         }
+
+        //private static string GetLocalIPAddress()
+        //{
+        //    var host = Dns.GetHostEntry(Dns.GetHostName());
+        //    foreach (var ip in host.AddressList)
+        //    {
+        //        if (ip.AddressFamily == AddressFamily.InterNetwork)
+        //        {
+        //            return ip.ToString();
+        //        }
+        //    }
+        //    throw new Exception("No network adapters with an IPv4 address in the system!");
+        //}
 
         public static void WriteLog(string content)
         {
