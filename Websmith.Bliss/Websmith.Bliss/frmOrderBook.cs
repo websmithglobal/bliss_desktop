@@ -715,49 +715,41 @@ namespace Websmith.Bliss
         /// <summary>
         /// 
         /// </summary>
-        private void GetNewOrderDetailForSocket()
+        public void GetNewOrderDetailForSocket()
         {
             try
             {
-                ENT.NEW_ORDER_101 objNEWORDER = new ENT.NEW_ORDER_101();
-                objNEWORDER.ackGuid = Guid.NewGuid().ToString();
-                objNEWORDER.ipAddress = getSystemIP();
-                objNEWORDER.syncCode = ENT.SyncCode.C_NEW_ORDER;
+                ENT.NEW_ORDER_101 objNEWORDER = new ENT.NEW_ORDER_101
+                {
+                    ackGuid = Guid.NewGuid().ToString(),
+                    ipAddress = GlobalVariable.getSystemIP(),
+                    syncCode = ENT.SyncCode.C_NEW_ORDER
+                };
 
-                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster();
-                objSyncMaster.SyncCode = ENT.SyncCode.C_NEW_ORDER;
-                objSyncMaster.batchCode = txtOrderId.Text.Trim();
-                objSyncMaster.date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
-                objSyncMaster.id = Guid.NewGuid().ToString();
+                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster
+                {
+                    SyncCode = ENT.SyncCode.C_NEW_ORDER,
+                    batchCode = txtOrderId.Text.Trim(),
+                    date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"),
+                    id = Guid.NewGuid().ToString()
+                };
                 objNEWORDER.syncMaster = objSyncMaster;
 
                 List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
-                ENT.OrderBook objENTOrder = new ENT.OrderBook();
-                objENTOrder.OrderID = new Guid(txtOrderId.Text);
-                objENTOrder.Mode = "GetRecordByOrderIDForSocket";
-                lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENTOrder);
+                lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENT: new ENT.OrderBook { OrderID = new Guid(txtOrderId.Text), Mode = "GetRecordByOrderIDForSocket" });
                 for (int i = 0; i < lstENTOrder.Count; i++)
                 {
-                    ENT.CustomerMasterData objENTCustomers = new ENT.CustomerMasterData();
-                    objENTCustomers.Mode = "GetRecordByIDForSocket";
-                    objENTCustomers.CustomerID = new Guid(lstENTOrder[i].customerId);
-                    ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENTCustomers);
+                    ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENT: new ENT.CustomerMasterData { Mode = "GetRecordByIDForSocket", CustomerID = new Guid(lstENTOrder[i].customerId) });
                     lstENTOrder[i].customer = objCustomers;
 
                     List<ENT.ItemsList> lstItemList = new List<ENT.ItemsList>();
-                    ENT.Transaction objTran = new ENT.Transaction();
-                    objTran.Mode = "GetRecordForNewOrderSocket";
-                    objTran.OrderID = new Guid(lstENTOrder[i].orderId);
-                    lstItemList = new DAL.Transaction().getItemListForSocket(objTran);
+                    lstItemList = new DAL.Transaction().getItemListForSocket(objENT: new ENT.Transaction { Mode = "GetRecordForNewOrderSocket", OrderID = new Guid(lstENTOrder[i].orderId) });
                     lstENTOrder[i].itemsList = lstItemList;
 
                     for (int n = 0; n < lstItemList.Count; n++)
                     {
                         List<ENT.ComboProductDetailItem> lstCPDIList = new List<ENT.ComboProductDetailItem>();
-                        ENT.ComboProductDetail objCPD = new ENT.ComboProductDetail();
-                        objCPD.Mode = "GetRecordByProductIDForSocket";
-                        objCPD.ProductID = new Guid(lstItemList[n].itemId);
-                        lstCPDIList = new DAL.ComboProductDetail().getComboItemForSocket(objCPD);
+                        lstCPDIList = new DAL.ComboProductDetail().getComboItemForSocket(objENT: new ENT.ComboProductDetail { Mode = "GetRecordByProductIDForSocket", ProductID = new Guid(lstItemList[n].itemId) });
                         lstItemList[n].comboProductDetailItems = lstCPDIList;
                     }
 
@@ -771,50 +763,21 @@ namespace Websmith.Bliss
                         lstItemList[n].ingredientses = lstIngredientsList;
                     }
                 }
-                
                 objNEWORDER.Object = lstENTOrder;
-
-                // This code is for send order json to single server as client
-                //if (AsynchronousClient.connected)
-                //{
-                //    AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
-                //}
-
+                
                 // This code is for send order json to all connected client as server
-                if (AsynchronousServer.runningServer)
+                // ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+
+                //This code is for send order json to single server as client
+                if (AsynchronousClient.connected)
                 {
-                    ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ipAddress, objNEWORDER.ackGuid);
+                    AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
                 }
             }
             catch (Exception)
             {
                 throw;
             }
-        }
-
-        private string getSystemIP()
-        {
-            string IP = "";
-            try
-            {
-                string strHostName = "";
-                strHostName = System.Net.Dns.GetHostName();
-                IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(strHostName);
-                IPAddress[] addr = ipEntry.AddressList;
-                if (addr.Length > 2)
-                {
-                    IP = addr[2].ToString();
-                }
-                else
-                {
-                    IP = addr[1].ToString();
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Internet connection problem.", "Branch Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            return IP;
         }
 
         #endregion
@@ -2698,6 +2661,7 @@ namespace Websmith.Bliss
                         dgvItem.Rows[Convert.ToInt32(btnPlus.Tag)].Cells["ordQty"].Value = txtQuantity.Text;
                         this.CalcTotal();
                         this.UpdateOrderTransaction();
+                        GetNewOrderDetailForSocket();
                     }
                 }
                 else
@@ -2725,6 +2689,7 @@ namespace Websmith.Bliss
                         dgvItem.Rows[Convert.ToInt32(btnPlus.Tag)].Cells["ordQty"].Value = txtQuantity.Text;
                         this.CalcTotal();
                         this.UpdateOrderTransaction();
+                        GetNewOrderDetailForSocket();
                     }
                 }
                 else
@@ -2745,6 +2710,7 @@ namespace Websmith.Bliss
                 if (dgvItem.Rows.Count > 0)
                 {
                     DeleteCartItem();
+                    GetNewOrderDetailForSocket();
                 }
                 else
                 {

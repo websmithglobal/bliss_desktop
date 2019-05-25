@@ -719,6 +719,9 @@ namespace Websmith.Bliss
                         objDALTill.InsertUpdateDeleteTillManage(objENTTill);
                     }
 
+                    // send order to connected tab
+                    ClientServerDataParsing.GetNewOrderDetailForSocket(objENTSAVE.OrderID.ToString());
+
                     //tcCheckOutDetail.SelectedIndex = 3;
                     tcCheckOutDetail.TabPages.Add(tabCodStep4);
                     tcCheckOutDetail.TabPages.Remove(tabCodStep3);
@@ -737,9 +740,10 @@ namespace Websmith.Bliss
                         if (lstSetting[0].PrintOnPaymentDone)
                         { PrintReceipt(); }
                     }
-                    
+
                     MessageBox.Show("Order payment successfully done.", "Check Out", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnCloseStep4.Focus();
+                    
                 }
             }
             catch (Exception ex)
