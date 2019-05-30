@@ -26,14 +26,19 @@ namespace Websmith.Bliss
                     WriteLog($"ACK SYNC CODE: {objJson.syncCode}");
                     if (objJson.syncCode == ENT.SyncCode.C_SEND_MESSAGE_ACKNOWLEDGEMENT)
                     {
-                        using (DAL.SendMessageData objDAL = new DAL.SendMessageData())
+                        ENT.SEND_MESSAGE_ACKNOWLEDGEMENT_605 objGetAck = JsonConvert.DeserializeObject<ENT.SEND_MESSAGE_ACKNOWLEDGEMENT_605>(stringJson);
+                        if (objGetAck != null)
                         {
-                            // this function update ack status 0 to 1
-                            _ = objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = objReceiveMessage.msg_guid.ToString(), client_ip = objReceiveMessage.client_ip, message_acknowledge_status = 1, Mode = "STATUS_ACK" });
-                            WriteLog($"Receive Ack ID {objReceiveMessage.msg_guid.ToString()} and IP {objReceiveMessage.client_ip}");
+                            using (DAL.SendMessageData objDAL = new DAL.SendMessageData())
+                            {
+                                WriteLog($"Receive Ack ID {objGetAck.Object.guid} and IP {objGetAck.Object.receiverClientIp}");
 
-                            // this function delete all the record which ack status is 1 because it is non-use record
-                            _ = objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { Mode = "DELETE" });
+                                // this function update ack status 0 to 1
+                                _ = objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { msg_guid = objGetAck.Object.guid, client_ip = objGetAck.Object.receiverClientIp, message_acknowledge_status = 1, Mode = "STATUS_ACK" });
+
+                                // this function delete all the record which ack status is 1 because it is non-use record
+                                _ = objDAL.InsertUpdateDeleteSendMessageData(objENT: new ENT.SendMessageData { Mode = "DELETE" });
+                            }
                         }
                     }
                     else
@@ -63,6 +68,7 @@ namespace Websmith.Bliss
                                 //Received data store in ReceiveMessageData table 
                                 using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
                                 {
+                                    objReceiveMessage.Mode = "ADD";
                                     _ = objDAL.InsertUpdateDeleteReceiveMessageData(objENT: objReceiveMessage);
                                 }
 
@@ -164,13 +170,18 @@ namespace Websmith.Bliss
                             DeviceName = "POS",
                             DeviceIP = objRequest.ipAddress.Trim(),
                             DeviceTypeID = 1,
-                            DeviceStatus = 1
+                            DeviceStatus = (int)GlobalVariable.DeviceStatus.Disconneted
                         };
                         using (DAL.DeviceMaster obj = new DAL.DeviceMaster())
                         {
                             if (obj.getDuplicateDeviceByIP(objENT604) <= 0)
                             {
                                 objENT604.Mode = "ADD";
+                                _ = obj.InsertUpdateDeleteDeviceMaster(objENT604);
+                            }
+                            else
+                            {
+                                objENT604.Mode = "UPDATE";
                                 _ = obj.InsertUpdateDeleteDeviceMaster(objENT604);
                             }
                         }
@@ -406,7 +417,7 @@ namespace Websmith.Bliss
                 objNEWORDER.Object = lstENTOrder;
 
                 // This code is for send order json to all connected client as server
-                // ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+                // SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
 
                 //This code is for send order json to single server as client
                 if (AsynchronousClient.connected)
@@ -419,5 +430,6 @@ namespace Websmith.Bliss
                 throw;
             }
         }
+
     }
 }

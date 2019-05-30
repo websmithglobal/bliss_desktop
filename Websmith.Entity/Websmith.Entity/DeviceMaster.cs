@@ -62,10 +62,8 @@ namespace Websmith.Entity
         {
             get {
                 if (_DeviceStatus == 0)
-                    _DeviceStatusText = "Deactive";
-                else if (_DeviceStatus == 1)
                     _DeviceStatusText = "Disconnected";
-                else if (_DeviceStatus == 2)
+                else if (_DeviceStatus == 1)
                     _DeviceStatusText = "Connected";
                 else
                     _DeviceStatusText = "";

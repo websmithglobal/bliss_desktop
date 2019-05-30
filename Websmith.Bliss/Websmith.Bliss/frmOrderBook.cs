@@ -715,70 +715,70 @@ namespace Websmith.Bliss
         /// <summary>
         /// 
         /// </summary>
-        public void GetNewOrderDetailForSocket()
-        {
-            try
-            {
-                ENT.NEW_ORDER_101 objNEWORDER = new ENT.NEW_ORDER_101
-                {
-                    ackGuid = Guid.NewGuid().ToString(),
-                    ipAddress = GlobalVariable.getSystemIP(),
-                    syncCode = ENT.SyncCode.C_NEW_ORDER
-                };
+        //public void GetNewOrderDetailForSocket()
+        //{
+        //    try
+        //    {
+        //        ENT.NEW_ORDER_101 objNEWORDER = new ENT.NEW_ORDER_101
+        //        {
+        //            ackGuid = Guid.NewGuid().ToString(),
+        //            ipAddress = GlobalVariable.getSystemIP(),
+        //            syncCode = ENT.SyncCode.C_NEW_ORDER
+        //        };
 
-                ENT.SyncMaster objSyncMaster = new ENT.SyncMaster
-                {
-                    SyncCode = ENT.SyncCode.C_NEW_ORDER,
-                    batchCode = txtOrderId.Text.Trim(),
-                    date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"),
-                    id = Guid.NewGuid().ToString()
-                };
-                objNEWORDER.syncMaster = objSyncMaster;
+        //        ENT.SyncMaster objSyncMaster = new ENT.SyncMaster
+        //        {
+        //            SyncCode = ENT.SyncCode.C_NEW_ORDER,
+        //            batchCode = txtOrderId.Text.Trim(),
+        //            date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"),
+        //            id = Guid.NewGuid().ToString()
+        //        };
+        //        objNEWORDER.syncMaster = objSyncMaster;
 
-                List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
-                lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENT: new ENT.OrderBook { OrderID = new Guid(txtOrderId.Text), Mode = "GetRecordByOrderIDForSocket" });
-                for (int i = 0; i < lstENTOrder.Count; i++)
-                {
-                    ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENT: new ENT.CustomerMasterData { Mode = "GetRecordByIDForSocket", CustomerID = new Guid(lstENTOrder[i].customerId) });
-                    lstENTOrder[i].customer = objCustomers;
+        //        List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
+        //        lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENT: new ENT.OrderBook { OrderID = new Guid(txtOrderId.Text), Mode = "GetRecordByOrderIDForSocket" });
+        //        for (int i = 0; i < lstENTOrder.Count; i++)
+        //        {
+        //            ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENT: new ENT.CustomerMasterData { Mode = "GetRecordByIDForSocket", CustomerID = new Guid(lstENTOrder[i].customerId) });
+        //            lstENTOrder[i].customer = objCustomers;
 
-                    List<ENT.ItemsList> lstItemList = new List<ENT.ItemsList>();
-                    lstItemList = new DAL.Transaction().getItemListForSocket(objENT: new ENT.Transaction { Mode = "GetRecordForNewOrderSocket", OrderID = new Guid(lstENTOrder[i].orderId) });
-                    lstENTOrder[i].itemsList = lstItemList;
+        //            List<ENT.ItemsList> lstItemList = new List<ENT.ItemsList>();
+        //            lstItemList = new DAL.Transaction().getItemListForSocket(objENT: new ENT.Transaction { Mode = "GetRecordForNewOrderSocket", OrderID = new Guid(lstENTOrder[i].orderId) });
+        //            lstENTOrder[i].itemsList = lstItemList;
 
-                    for (int n = 0; n < lstItemList.Count; n++)
-                    {
-                        List<ENT.ComboProductDetailItem> lstCPDIList = new List<ENT.ComboProductDetailItem>();
-                        lstCPDIList = new DAL.ComboProductDetail().getComboItemForSocket(objENT: new ENT.ComboProductDetail { Mode = "GetRecordByProductIDForSocket", ProductID = new Guid(lstItemList[n].itemId) });
-                        lstItemList[n].comboProductDetailItems = lstCPDIList;
-                    }
+        //            for (int n = 0; n < lstItemList.Count; n++)
+        //            {
+        //                List<ENT.ComboProductDetailItem> lstCPDIList = new List<ENT.ComboProductDetailItem>();
+        //                lstCPDIList = new DAL.ComboProductDetail().getComboItemForSocket(objENT: new ENT.ComboProductDetail { Mode = "GetRecordByProductIDForSocket", ProductID = new Guid(lstItemList[n].itemId) });
+        //                lstItemList[n].comboProductDetailItems = lstCPDIList;
+        //            }
 
-                    for (int n = 0; n < lstItemList.Count; n++)
-                    {
-                        List<ENT.Ingredients> lstIngredientsList = new List<ENT.Ingredients>();
-                        //ENT.IngredientsMasterDetail objING = new ENT.IngredientsMasterDetail();
-                        //objING.Mode = "GetRecordByProductIDForSocket";
-                        //objING.IngredientsID = new Guid(lstItemList[n].itemId);
-                        //lstIngredientsList = new DAL.IngredientsMasterDetail().getIngredientsMasterDetail();
-                        lstItemList[n].ingredientses = lstIngredientsList;
-                    }
-                }
-                objNEWORDER.Object = lstENTOrder;
-                
-                // This code is for send order json to all connected client as server
-                // ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+        //            for (int n = 0; n < lstItemList.Count; n++)
+        //            {
+        //                List<ENT.Ingredients> lstIngredientsList = new List<ENT.Ingredients>();
+        //                //ENT.IngredientsMasterDetail objING = new ENT.IngredientsMasterDetail();
+        //                //objING.Mode = "GetRecordByProductIDForSocket";
+        //                //objING.IngredientsID = new Guid(lstItemList[n].itemId);
+        //                //lstIngredientsList = new DAL.IngredientsMasterDetail().getIngredientsMasterDetail();
+        //                lstItemList[n].ingredientses = lstIngredientsList;
+        //            }
+        //        }
+        //        objNEWORDER.Object = lstENTOrder;
 
-                //This code is for send order json to single server as client
-                if (AsynchronousClient.connected)
-                {
-                    AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //        //This code is for send order json to single server as client
+        //        if (AsynchronousClient.connected)
+        //        {
+        //            AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
+        //        }
+
+        //        // This code is for send order json to all connected client as server
+        //        ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         #endregion
 
@@ -1045,7 +1045,10 @@ namespace Websmith.Bliss
                             {
                                 Guid ProdId = new Guid(button.Tag.ToString());
                                 this.AddCartItem(ProdId);
-                                GetNewOrderDetailForSocket();
+                                if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                                {
+                                    ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                                }
                             }
                         }
                     }
@@ -1070,7 +1073,10 @@ namespace Websmith.Bliss
                     cmbProduct.Focus();
 
                     // send order data to connected client
-                    GetNewOrderDetailForSocket();
+                    if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                    {
+                        ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                    }
                 }
             }
             catch (Exception ex)
@@ -2519,7 +2525,10 @@ namespace Websmith.Bliss
                     tcMain.SelectedIndex = 0;
                     pnlSearch.Visible = true;
                     pnlModifier.Visible = false;
-                    this.GetNewOrderDetailForSocket();
+                    if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                    {
+                        ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                    }
                 }
                 IsRefreshMenuPanel = true;
             }
@@ -2575,9 +2584,12 @@ namespace Websmith.Bliss
                     tcMain.SelectedIndex = 0;
                     pnlSearch.Visible = true;
                     pnlModifier.Visible = false;
-                    
+
                     // send order data to connected client
-                    GetNewOrderDetailForSocket();
+                    if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                    {
+                        ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                    }
                 }
                 else
                 {
@@ -2661,7 +2673,10 @@ namespace Websmith.Bliss
                         dgvItem.Rows[Convert.ToInt32(btnPlus.Tag)].Cells["ordQty"].Value = txtQuantity.Text;
                         this.CalcTotal();
                         this.UpdateOrderTransaction();
-                        GetNewOrderDetailForSocket();
+                        if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                        {
+                            ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                        }
                     }
                 }
                 else
@@ -2689,7 +2704,10 @@ namespace Websmith.Bliss
                         dgvItem.Rows[Convert.ToInt32(btnPlus.Tag)].Cells["ordQty"].Value = txtQuantity.Text;
                         this.CalcTotal();
                         this.UpdateOrderTransaction();
-                        GetNewOrderDetailForSocket();
+                        if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                        {
+                            ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                        }
                     }
                 }
                 else
@@ -2710,7 +2728,10 @@ namespace Websmith.Bliss
                 if (dgvItem.Rows.Count > 0)
                 {
                     DeleteCartItem();
-                    GetNewOrderDetailForSocket();
+                    if (!string.IsNullOrWhiteSpace(txtOrderId.Text))
+                    {
+                        ClientServerDataParsing.GetNewOrderDetailForSocket(txtOrderId.Text.Trim());
+                    }
                 }
                 else
                 {

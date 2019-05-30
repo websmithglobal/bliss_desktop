@@ -130,7 +130,7 @@ namespace Websmith.Bliss
                     {
                         break;
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(2000);
                 }
             });
 
@@ -228,20 +228,6 @@ namespace Websmith.Bliss
 
         }
 
-        // Get ip address of current system
-        private static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
-
         //helper methods to set form text from another thread
         private delegate void ServerSetControlPropertyThreadSafeDelegate(System.Windows.Forms.Control control, string propertyName, object propertyValue);
 
@@ -301,7 +287,7 @@ namespace Websmith.Bliss
         {
             this.connected = true;
             itemStatus.ImageLocation = "green.bmp"; //set connected image in clients list
-            new BAL.DeviceMaster().ChangeStatus(key, 2); // change device status to connected
+            new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to connected
 
             chatThread = new Thread(() =>
             {
@@ -325,7 +311,7 @@ namespace Websmith.Bliss
                             //client.Close();
                             //connected = false;
                             itemStatus.ImageLocation = "red.bmp"; //set disconnected image in clients list
-                            new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
+                            new BAL.DeviceMaster().ChangeStatus(key, 0); // change device status to disconnected
                         }
                         else //put buffer bytes in string
                         {
@@ -341,9 +327,9 @@ namespace Websmith.Bliss
                         connected = false;
                         connected = false;
                         itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
-                        new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to disconnected
+                        new BAL.DeviceMaster().ChangeStatus(key, 0); // change device status to disconnected
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(2000);
                 }
             });
 

@@ -142,7 +142,7 @@ namespace Websmith.Bliss
                 objENT.DeviceName = txtDeviceName.Text.Trim();
                 objENT.DeviceIP = txtDeviceIP.Text.Trim();
                 objENT.DeviceTypeID = Convert.ToInt32(cmbDeviceType.SelectedValue);
-                objENT.DeviceStatus = 1;
+                objENT.DeviceStatus = (int)GlobalVariable.DeviceStatus.Disconneted;
                 objENT.Mode = strMode;
 
                 if (objDAL.getDuplicateDeviceByName(objENT) > 0)
@@ -154,9 +154,12 @@ namespace Websmith.Bliss
 
                 if (objDAL.InsertUpdateDeleteDeviceMaster(objENT))
                 {
+                    new frmOrderBook().StartSocketServerClient();
+                    this.SendNewAddedDeviceToClient(objENT);
+                    ClientServerDataParsing.AddDeviceRequest();
                     ClearData();
                     MessageBox.Show("Device saved successfully.", "Device Type Master", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ClientServerDataParsing.SendConnectedDeviceToClient();
+                    //ClientServerDataParsing.SendConnectedDeviceToClient();
                 }
                 else
                 {
@@ -263,5 +266,47 @@ namespace Websmith.Bliss
                 MessageBox.Show(ex.Message.ToString());
             }
         }
+
+        private void SendNewAddedDeviceToClient(ENT.DeviceMaster objNEW)
+        {
+            try
+            {
+                List<ENT.AddDevice> lstDevice = new List<ENT.AddDevice>();
+                lstDevice.Add(new ENT.AddDevice
+                {
+                    guId = objNEW.DeviceID.ToString(),
+                    ip = objNEW.DeviceIP,
+                    station = "POS",
+                    stationname = objNEW.DeviceName,
+                    status = objNEW.DeviceStatus,
+                    type = objNEW.DeviceTypeID
+                });
+
+                ENT.AddDeviceList objDevicesList = new ENT.AddDeviceList { addDevices = lstDevice };
+                ENT.ADD_DEVICE_601 obj601 = new ENT.ADD_DEVICE_601
+                {
+                    ackGuid = Guid.NewGuid().ToString(),
+                    ipAddress = GlobalVariable.getSystemIP(),
+                    syncCode = ENT.SyncCode.C_ADD_DEVICE_RESPONSE,
+                    Object = objDevicesList,
+                    syncMaster = new ENT.SyncMaster {
+                        batchCode = objNEW.DeviceID.ToString(),
+                        date = DateTime.Now.ToString(),
+                        id = Guid.NewGuid().ToString(),
+                        SyncCode =ENT.SyncCode.C_ADD_DEVICE
+                    }
+                };
+
+                string newJson = JsonConvert.SerializeObject(obj601);
+
+                // Send Add Device Json To All Connected devices
+                ClientServerDataParsing.SendJsonTo(newJson, obj601.ackGuid);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"SendNewAddedDeviceToClient: {ex.Message}");
+            }
+        }
+
     }
 }
