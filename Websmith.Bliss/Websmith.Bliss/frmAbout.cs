@@ -9,9 +9,6 @@ using DAL = Websmith.DataLayer;
 using System.Net;
 using NativeWifi;
 using OnBarcode.Barcode;
-using System.Globalization;
-using System.Drawing;
-using System.Drawing.Printing;
 
 namespace Websmith.Bliss
 {

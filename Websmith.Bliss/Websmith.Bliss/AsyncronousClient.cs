@@ -36,7 +36,7 @@ namespace Websmith.Bliss
                 //set text to console using local helper class to set text from another thread than the one it was created from
                 ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Try connecting to " + ipAddress + ":" + port + "...\n");
 
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port); 
 
                 client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -49,9 +49,10 @@ namespace Websmith.Bliss
                         client.Connect(remoteEP);
                         connected = true;
                     }
-                    catch (System.Net.Sockets.SocketException e)
+                    catch (System.Net.Sockets.SocketException ex)
                     {
-                        Console.WriteLine(e.ToString());
+                        Console.WriteLine(ex.ToString());
+                        ClientServerDataParsing.SaveSocketErrorLog("CONNECT", ex);
                         ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Unable to connect\n");
                         if (keepConnection)
                             StartClient();
@@ -81,9 +82,10 @@ namespace Websmith.Bliss
                                 ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Server: " + response);
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(e.ToString());
+                            Console.WriteLine(ex.ToString());
+                            ClientServerDataParsing.SaveSocketErrorLog("RECEIVED_BYTES", ex);
                             if (connected)
                             {
                                 ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Lost server connection 3 \n");
@@ -96,11 +98,11 @@ namespace Websmith.Bliss
                 });
                 listenThread.Start();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine(ex.ToString());
+                ClientServerDataParsing.SaveSocketErrorLog("START_CLIENT", ex);
                 connected = false;
-                Console.WriteLine(e.ToString());
                 ClientSetControlPropertyThreadSafe(console, "Text", console.Text + "Error connecting check ip/port\n");
                 if (keepConnection)
                     StartClient();

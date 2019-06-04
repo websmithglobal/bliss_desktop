@@ -67,7 +67,7 @@
       <HintPath>bin\Debug\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="ManagedWifi">
-      <HintPath>C:\Users\COM\Downloads\Compressed\managedwifi-1.1\bin\Debug\ManagedWifi.dll</HintPath>
+      <HintPath>bin\Debug\ManagedWifi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -79,10 +79,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OnBarcode.Barcode.WinForms">
-      <HintPath>..\..\..\RAJKOT\MobileStore\MobileStore\bin\Debug\OnBarcode.Barcode.WinForms.dll</HintPath>
+      <HintPath>bin\Debug\OnBarcode.Barcode.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="SpreadsheetLight">
-      <HintPath>..\..\..\RAJKOT\OUTSOURCING\MY FARM\My Farm Manager\Master\Bin\SpreadsheetLight.dll</HintPath>
+      <HintPath>bin\Debug\SpreadsheetLight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

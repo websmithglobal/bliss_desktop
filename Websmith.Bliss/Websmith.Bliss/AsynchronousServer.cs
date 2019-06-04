@@ -81,7 +81,7 @@ namespace Websmith.Bliss
             IPAddress ipAddress = IPAddress.Parse(localIp);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
-            server = new Socket(ipAddress.AddressFamily,SocketType.Stream, ProtocolType.Tcp);
+            server = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             server.Bind(localEndPoint);
             server.Listen(10);
@@ -97,6 +97,7 @@ namespace Websmith.Bliss
                     {
                         try
                         {
+                            Application.DoEvents();
                             Socket client = server.Accept();
                             bool contained = true;
 
@@ -108,10 +109,14 @@ namespace Websmith.Bliss
                                 clients[client.RemoteEndPoint.ToString().Split(':')[0]].instanceClient();
                                 try
                                 {
-                                    ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client reconnected: " + client.RemoteEndPoint.ToString() + "  (" + clients[client.RemoteEndPoint.ToString().Split(':')[0]].index + ")" + "\n");
+                                    if (client != null)
+                                    {
+                                        ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client reconnected: " + client.RemoteEndPoint.ToString() + "  (" + clients[client.RemoteEndPoint.ToString().Split(':')[0]].index + ")" + "\n");
+                                    }
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
+                                    ClientServerDataParsing.SaveSocketErrorLog("PROPERTY_THREAD_SAFE", ex);
                                 }
                             }
                             else //if client not already in list set it as new client
@@ -121,16 +126,17 @@ namespace Websmith.Bliss
                                 StoreData();
                             }
                         }
-                        catch (System.Net.Sockets.SocketException)
+                        catch (SocketException ex)
                         {
                             runningServer = false;
+                            ClientServerDataParsing.SaveSocketErrorLog("SOCKET_EXCEPTION", ex);
                         }
                     }
                     else
                     {
                         break;
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(500);
                 }
             });
 
@@ -177,6 +183,7 @@ namespace Websmith.Bliss
         //this function created by kg for send data to all connected clients
         public static void SendToAllClient(String data, string ackGuid)
         {
+            Application.DoEvents();
             byte[] byteData = Encoding.ASCII.GetBytes(data);
             foreach (KeyValuePair<string, Client> client in clients)
             {
@@ -220,9 +227,10 @@ namespace Websmith.Bliss
                         ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server closed\n");
                     }
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Error trying to close server: " + e.ToString() + "\n");
+                    ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Error trying to close server: " + ex.ToString() + "\n");
+                    ClientServerDataParsing.SaveSocketErrorLog("CLOSE", ex);
                 }
             }
 
@@ -241,7 +249,7 @@ namespace Websmith.Bliss
             }
             else
             {
-                control.GetType().InvokeMember(propertyName,BindingFlags.SetProperty,null,control,new object[] { propertyValue });
+                control.GetType().InvokeMember(propertyName, BindingFlags.SetProperty, null, control, new object[] { propertyValue });
             }
 
             //get new console height and set scroll to bottom, using helper class to do this, because this is usually called from another thread (listenThreadClass)
@@ -301,8 +309,11 @@ namespace Websmith.Bliss
                         {
                             receivedBytes = client.Receive(bytes);
                         }
-                        catch (Exception){ }
-                       
+                        catch (Exception ex)
+                        {
+                            ClientServerDataParsing.SaveSocketErrorLog("RECEIVED_BYTES", ex);
+                        }
+
                         //get message from connected client in bytes buffer
                         if (receivedBytes == 0) //if not bytes received means client lost connection
                         {
@@ -322,14 +333,15 @@ namespace Websmith.Bliss
                             //AsynchronousServer.Send(response, index);   // comment by kg
                         }
                     }
-                    catch (System.Net.Sockets.SocketException)
+                    catch (System.Net.Sockets.SocketException ex)
                     {
                         connected = false;
                         connected = false;
                         itemStatus.ImageLocation = "red.bmp";//set disconnected image in clients list
                         new BAL.DeviceMaster().ChangeStatus(key, 0); // change device status to disconnected
+                        ClientServerDataParsing.SaveSocketErrorLog("SOCKET_EXCEPTION", ex);
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(500);
                 }
             });
 
@@ -383,7 +395,7 @@ namespace Websmith.Bliss
             itemDelete.Text = "DELETE";
             itemDelete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             itemDelete.Click += new System.EventHandler(deleteClick); //set function to "DELETE" click
-            itemDelete.Visible = false;  // delete button visible false
+            itemDelete.Visible = true;  // delete button visible false
 
             itemPanel.Controls.Add(itemIndex);
             itemPanel.Controls.Add(itemStatus);
@@ -397,7 +409,7 @@ namespace Websmith.Bliss
         public void close() //disconnect client
         {
             if (connected)
-            {                
+            {
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
                 this.connected = false;

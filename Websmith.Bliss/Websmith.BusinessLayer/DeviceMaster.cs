@@ -17,18 +17,19 @@ namespace Websmith.BusinessLayer
         {
             try
             {
-                ENT.DeviceMaster objENT = new ENT.DeviceMaster();
-                objENT.DeviceIP = ipAddress.Trim();
-                objENT.DeviceStatus = status;
-                objENT.Mode = "STATUS";
                 using (DAL.DeviceMaster objDAL = new DAL.DeviceMaster())
                 {
-                    objDAL.InsertUpdateDeleteDeviceMaster(objENT);
+                    _ = objDAL.InsertUpdateDeleteDeviceMaster(objENT: new ENT.DeviceMaster
+                    {
+                        DeviceIP = ipAddress,
+                        DeviceStatus = status,
+                        Mode = "STATUS"
+                    });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 

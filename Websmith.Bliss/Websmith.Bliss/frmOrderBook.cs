@@ -645,59 +645,55 @@ namespace Websmith.Bliss
                 List<ENT.DeviceMaster> lstENT = GlobalVariable.GetAllPOSDevice();
                 for (int i = 0; i < lstENT.Count; i++)
                 {
-                    String Addr = $"{ lstENT[i].DeviceIP}:{Properties.Settings.Default.Port}";
-                    String[] split = Addr.Split(':');
-
-                    #region Start Server Non Use
-
-                    //Start Server
-                    //if (split.Length == 2)
-                    //{
-                    //    //Start Server and connect to client with given port
-                    //    AsynchronousServer.consoleContainer = this.panel58;
-                    //    AsynchronousServer.list = this.panel60;   //link list of all connected clients
-                    //    if (!AsynchronousServer.runningServer)
-                    //    {
-                    //        AsynchronousServer.port = Int32.Parse(split[1]);
-                    //        AsynchronousServer.StartListening();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show("Bad adress, only allowed ip:port combination.", "Bliss", MessageBoxButtons.OK);
-                    //}
-
-                    #endregion
-
                     #region Start Client
 
-                    // Start Client
                     AsynchronousClient.console = this.clientConsole;
-                    if (!AsynchronousClient.connected)
+                    if (lstENT.Count > 0)
                     {
-                        if (split.Length == 2)
+                        try
                         {
-                            try
-                            {
-                                //start client and connect to server with given ip and port
-                                AsynchronousClient.keepConnection = true;
-                                AsynchronousClient.ipAddress = IPAddress.Parse(split[0]);
-                                AsynchronousClient.port = Int32.Parse(split[1]);
-                                AsynchronousClient.console = this.clientConsole;
-                                AsynchronousClient.consoleContainer = this.panel59;
-                                AsynchronousClient.StartClient();
-                            }
-                            catch (System.FormatException)
-                            {
-                                MessageBox.Show("Invalid ip/port.", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            //start client and connect to server with given ip and port
+                            AsynchronousClient.keepConnection = true;
+                            AsynchronousClient.ipAddress = IPAddress.Parse(lstENT[i].DeviceIP);
+                            AsynchronousClient.port = Properties.Settings.Default.Port;
+                            AsynchronousClient.console = this.clientConsole;
+                            AsynchronousClient.consoleContainer = this.panel59;
+                            AsynchronousClient.StartClient();
                         }
-                        else
+                        catch (System.FormatException)
                         {
-                            MessageBox.Show("Bad adress, only allowed ip:port combination", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Invalid ip/port.", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("Bad adress, only allowed ip:port combination", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
 
+                    //if (!AsynchronousClient.connected)
+                    //{
+                    //    if (lstENT.Count > 0)
+                    //    {
+                    //        try
+                    //        {
+                    //            //start client and connect to server with given ip and port
+                    //            AsynchronousClient.keepConnection = true;
+                    //            AsynchronousClient.ipAddress = IPAddress.Parse(lstENT[i].DeviceIP);
+                    //            AsynchronousClient.port = Properties.Settings.Default.Port;
+                    //            AsynchronousClient.console = this.clientConsole;
+                    //            AsynchronousClient.consoleContainer = this.panel59;
+                    //            AsynchronousClient.StartClient();
+                    //        }
+                    //        catch (System.FormatException)
+                    //        {
+                    //            MessageBox.Show("Invalid ip/port.", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        MessageBox.Show("Bad adress, only allowed ip:port combination", "Bliss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //    }
+                    //}
                     #endregion
                 }
 
@@ -708,6 +704,7 @@ namespace Websmith.Bliss
             }
             catch (Exception ex)
             {
+                ClientServerDataParsing.SaveSocketErrorLog("START_SOCKET_SERVER_CLIENT", ex);
                 MessageBox.Show("Error: " + ex.Message.ToString());
             }
         }

@@ -97,6 +97,7 @@
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />
     <Compile Include="ShiftWiseEmployee.cs" />
+    <Compile Include="SocketErrorLog.cs" />
     <Compile Include="SubFeatureDetail.cs" />
     <Compile Include="SyncMasterSave.cs" />
     <Compile Include="TableMasterDetail.cs" />

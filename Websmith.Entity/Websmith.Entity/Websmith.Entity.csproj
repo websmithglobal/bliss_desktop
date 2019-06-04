@@ -101,6 +101,7 @@
     <Compile Include="ShiftMaster.cs" />
     <Compile Include="ShiftMasterDetail.cs" />
     <Compile Include="ShiftWiseEmployee.cs" />
+    <Compile Include="SocketErrorLog.cs" />
     <Compile Include="SubCategoryDetail.cs" />
     <Compile Include="SubFeatureDetail.cs" />
     <Compile Include="SyncCode.cs" />

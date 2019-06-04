@@ -128,7 +128,7 @@ namespace Websmith.Bliss
                                 };
                                 using (DAL.DeviceMaster obj = new DAL.DeviceMaster())
                                 {
-                                    if (obj.getDuplicateDeviceByName(objENT) <= 0)
+                                    if (obj.getDuplicateDeviceByIP(objENT) <= 0)
                                     {
                                         objENT.Mode = "ADD";
                                         _ = obj.InsertUpdateDeleteDeviceMaster(objENT);
@@ -157,10 +157,7 @@ namespace Websmith.Bliss
                         }
                         SendMessageAcknowledgement(objRemove.ipAddress, objRemove.ackGuid);
                         break;
-                    case ENT.SyncCode.C_ADD_DEVICE_RESPONSE:
-                        GetJson = JsonConvert.SerializeObject(objJson);
-                        ENT.ADD_DEVICE_RESPONSE_603 objResponse = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_RESPONSE_603>(GetJson);
-                        break;
+                    // This code is used for add requested device from tab on start up device
                     case ENT.SyncCode.C_ADD_DEVICE_REQUEST:
                         GetJson = JsonConvert.SerializeObject(objJson);
                         ENT.ADD_DEVICE_REQUEST_604 objRequest = JsonConvert.DeserializeObject<ENT.ADD_DEVICE_REQUEST_604>(GetJson);
@@ -233,6 +230,21 @@ namespace Websmith.Bliss
                 if (AsynchronousServer.runningServer)
                 {
                     AsynchronousServer.SendToAllClient(message, ackGuid);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog($"SendJsonTo => {ex.Message}");
+            }
+        }
+
+        public static void SendJsonToAll(string message)
+        {
+            try
+            {
+                if (AsynchronousServer.runningServer)
+                {
+                    AsynchronousServer.Send(message, -1);
                 }
             }
             catch (Exception ex)
@@ -353,19 +365,6 @@ namespace Websmith.Bliss
             }
         }
 
-        private static void WriteLog(string content)
-        {
-            try
-            {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "SocketJsonLog.txt"), true))
-                {
-                    writer.WriteLine($"{content}");
-                    writer.Close();
-                }
-            }
-            catch { }
-        }
-
         public static void GetNewOrderDetailForSocket(string OrderID)
         {
             try
@@ -417,7 +416,8 @@ namespace Websmith.Bliss
                 objNEWORDER.Object = lstENTOrder;
 
                 // This code is for send order json to all connected client as server
-                // SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+                //SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
+                //SendJsonToAll(JsonConvert.SerializeObject(objNEWORDER));
 
                 //This code is for send order json to single server as client
                 if (AsynchronousClient.connected)
@@ -429,6 +429,35 @@ namespace Websmith.Bliss
             {
                 throw;
             }
+        }
+
+        public static void SaveSocketErrorLog(string location, Exception ex)
+        {
+            try
+            {
+                using (DAL.SocketErrorLog objDAL = new DAL.SocketErrorLog())
+                {
+                    objDAL.InsertUpdateDeleteSocketErrorLog(objENT: new ENT.SocketErrorLog {
+                        log_error_location = location,
+                        log_exception =ex.Message,
+                        Mode ="ADD"
+                    });
+                }
+            }
+            catch { }
+        }
+
+        private static void WriteLog(string content)
+        {
+            try
+            {
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "SocketJsonLog.txt"), true))
+                {
+                    writer.WriteLine($"{content}");
+                    writer.Close();
+                }
+            }
+            catch { }
         }
 
     }
