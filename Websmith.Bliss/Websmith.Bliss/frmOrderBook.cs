@@ -43,6 +43,8 @@ namespace Websmith.Bliss
         public frmOrderBook()
         {
             InitializeComponent();
+
+            // This code is used to disable copy and paste in cart item grid.
             dgvItem.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
         }
 
@@ -51,12 +53,17 @@ namespace Websmith.Bliss
             try
             {
                 this.Text = "DASHBOARD || " + GlobalVariable.BranchName.ToUpper() + " || " + GlobalVariable.EmployeeName.ToUpper();
+                // set backgraound color of menu tab 
                 tpMenu.BackColor = Color.Black;
                 tpTabAll.BackColor = Color.Black;
                 tpTabVacant.BackColor = Color.Black;
                 tpTabOccupied.BackColor = Color.Black;
                 IsRefreshMenuPanel = true;
+
+                // this function is used to reset all the control of form.
                 this.ClearData();
+
+                // this function is used to start socket server client for receiving message from other device
                 this.StartSocketServerClient();
             }
             catch (Exception ex)
@@ -67,7 +74,7 @@ namespace Websmith.Bliss
 
         private void frmOrderBook_SizeChanged(object sender, EventArgs e)
         {
-            //this.GridColumnWidthChange();
+            // this function is used to reset menu tab panel
             this.TabControlIndexChanged();
         }
 
@@ -75,6 +82,7 @@ namespace Websmith.Bliss
         {
             try
             {
+                // all the if conditions is for shortcut by key event of main form
                 if (e.KeyCode == Keys.F5)
                 {
                     tcMain.SelectedIndex = 0;
@@ -130,6 +138,10 @@ namespace Websmith.Bliss
 
         #region Common Function
 
+        /// <summary>
+        /// this function is used to generate unique order number by prefix, employee code and timespan combination.
+        /// </summary>
+        /// <returns></returns>
         private string GetOrderNo()
         {
             string strOrderNo = "";
@@ -142,16 +154,19 @@ namespace Websmith.Bliss
                 { strOrderNo = strOrderPrefix + "/" + GlobalVariable.EmployeeCode + "/" + tsOrder; }
                 else
                 { strOrderNo = GlobalVariable.EmployeeCode + "/" + tsOrder; }
-
             }
             catch (Exception)
             {
-
                 throw;
             }
             return strOrderNo;
         }
 
+        /// <summary>
+        /// this function is used to get order status like order is paid, pay, and cancel status
+        /// </summary>
+        /// <param name="OrderID"></param>
+        /// <returns></returns>
         private int GetOrderStatus(string OrderID)
         {
             int result = 0;
@@ -190,21 +205,9 @@ namespace Websmith.Bliss
             return result;
         }
 
-        private void GridColumnWidthChange()
-        {
-            try
-            {
-                dgvItem.Columns["ordItemName"].Width = Convert.ToInt16(dgvItem.Width * 32 / 100);
-                dgvItem.Columns["ordQty"].Width = Convert.ToInt16(dgvItem.Width * 14 / 100);
-                dgvItem.Columns["ordRate"].Width = Convert.ToInt16(dgvItem.Width * 12 / 100);
-                dgvItem.Columns["ordTotal"].Width = Convert.ToInt16(dgvItem.Width * 14 / 100);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString(), "Order Book", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        /// <summary>
+        /// this function is used to hide/show calculation order amount.
+        /// </summary>
         private void VisibleTaxTable()
         {
             try
@@ -246,6 +249,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function called when menu tab insed change.
+        /// it will manage all the tab munu by flag.
+        /// </summary>
         private void TabControlIndexChanged()
         {
             try
@@ -254,6 +261,7 @@ namespace Websmith.Bliss
                 {
                     #region Display Category And Product
 
+                    // Display Category And Product
                     if (IsRefreshMenuPanel)
                     {
                         tpMenu.Controls.Remove(pnlAddressBar);
@@ -345,6 +353,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function used when user click on cart item.
+        /// it will call the url by web request for download image of selected item.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <returns></returns>
         public Image DownloadImageFromUrl(string imageUrl)
         {
             Image image = null;
@@ -365,6 +379,13 @@ namespace Websmith.Bliss
             return image;
         }
 
+        /// <summary>
+        /// this function is used enable/desable main buttond of order form.
+        /// </summary>
+        /// <param name="_walkIn"></param>
+        /// <param name="_selectCust"></param>
+        /// <param name="_sendKDS"></param>
+        /// <param name="_checkOut"></param>
         private void EnableButton(bool _walkIn, bool _selectCust, bool _sendKDS, bool _checkOut)
         {
             try
@@ -381,6 +402,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used for fill the dropdown list of recent order for filter by today, yesterday and custom
+        /// </summary>
         private void FillAllComboRecentOrder()
         {
             try
@@ -417,6 +441,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get all the product for add to cart item 
+        /// this dropdrop is show in right-top panel of menu in main form
+        /// </summary>
         private void FillAllComboProductLookup()
         {
             try
@@ -439,6 +467,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to calculate the order total including tax and other charge
+        /// </summary>
         private void CalcTotal()
         {
             try
@@ -490,6 +521,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get tax detail from setting table and display it to order total panel
+        /// </summary>
         private void GetTaxFromGeneralSetting()
         {
             try
@@ -522,6 +556,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to reset all textboxes, dropdown, item grid, menu, etc.
+        /// </summary>
         private void ClearData()
         {
             try
@@ -531,6 +568,9 @@ namespace Websmith.Bliss
                 this.EnableButton(true, true, false, false);
                 strMode = "ADD";
                 strModeDetail = "ADD";
+
+                #region Clear All TaxBox
+
                 txtDateTime.Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
                 txtInvoiceNo.Text = string.Empty;
                 txtOrderId.Text = string.Empty;
@@ -567,6 +607,8 @@ namespace Websmith.Bliss
                 txtProductDetail.Text = string.Empty;
                 txtSearchQty.Text = string.Empty;
 
+                #endregion
+
                 dgvItem.Rows.Clear();
                 intSort = 0;
                 tblVisible = false;
@@ -587,6 +629,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this finction is used to delete added cart item and update cart and order transaction.
+        /// </summary>
         private void DeleteCartItem()
         {
             try
@@ -709,78 +754,14 @@ namespace Websmith.Bliss
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        //public void GetNewOrderDetailForSocket()
-        //{
-        //    try
-        //    {
-        //        ENT.NEW_ORDER_101 objNEWORDER = new ENT.NEW_ORDER_101
-        //        {
-        //            ackGuid = Guid.NewGuid().ToString(),
-        //            ipAddress = GlobalVariable.getSystemIP(),
-        //            syncCode = ENT.SyncCode.C_NEW_ORDER
-        //        };
-
-        //        ENT.SyncMaster objSyncMaster = new ENT.SyncMaster
-        //        {
-        //            SyncCode = ENT.SyncCode.C_NEW_ORDER,
-        //            batchCode = txtOrderId.Text.Trim(),
-        //            date = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"),
-        //            id = Guid.NewGuid().ToString()
-        //        };
-        //        objNEWORDER.syncMaster = objSyncMaster;
-
-        //        List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
-        //        lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENT: new ENT.OrderBook { OrderID = new Guid(txtOrderId.Text), Mode = "GetRecordByOrderIDForSocket" });
-        //        for (int i = 0; i < lstENTOrder.Count; i++)
-        //        {
-        //            ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENT: new ENT.CustomerMasterData { Mode = "GetRecordByIDForSocket", CustomerID = new Guid(lstENTOrder[i].customerId) });
-        //            lstENTOrder[i].customer = objCustomers;
-
-        //            List<ENT.ItemsList> lstItemList = new List<ENT.ItemsList>();
-        //            lstItemList = new DAL.Transaction().getItemListForSocket(objENT: new ENT.Transaction { Mode = "GetRecordForNewOrderSocket", OrderID = new Guid(lstENTOrder[i].orderId) });
-        //            lstENTOrder[i].itemsList = lstItemList;
-
-        //            for (int n = 0; n < lstItemList.Count; n++)
-        //            {
-        //                List<ENT.ComboProductDetailItem> lstCPDIList = new List<ENT.ComboProductDetailItem>();
-        //                lstCPDIList = new DAL.ComboProductDetail().getComboItemForSocket(objENT: new ENT.ComboProductDetail { Mode = "GetRecordByProductIDForSocket", ProductID = new Guid(lstItemList[n].itemId) });
-        //                lstItemList[n].comboProductDetailItems = lstCPDIList;
-        //            }
-
-        //            for (int n = 0; n < lstItemList.Count; n++)
-        //            {
-        //                List<ENT.Ingredients> lstIngredientsList = new List<ENT.Ingredients>();
-        //                //ENT.IngredientsMasterDetail objING = new ENT.IngredientsMasterDetail();
-        //                //objING.Mode = "GetRecordByProductIDForSocket";
-        //                //objING.IngredientsID = new Guid(lstItemList[n].itemId);
-        //                //lstIngredientsList = new DAL.IngredientsMasterDetail().getIngredientsMasterDetail();
-        //                lstItemList[n].ingredientses = lstIngredientsList;
-        //            }
-        //        }
-        //        objNEWORDER.Object = lstENTOrder;
-
-        //        //This code is for send order json to single server as client
-        //        if (AsynchronousClient.connected)
-        //        {
-        //            AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
-        //        }
-
-        //        // This code is for send order json to all connected client as server
-        //        ClientServerDataParsing.SendJsonTo(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
         #endregion
 
         #region Breadcrumb Panel
 
+        /// <summary>
+        /// this function is used to draw the dynamic panel with responsive layout(resolution wise draw).
+        /// </summary>
+        /// <param name="pnlName"></param>
         private void drawAddressBar(string pnlName)
         {
             try
@@ -806,6 +787,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to create dynamic button for Breadcrumb of main menu.
+        /// </summary>
         private void addAddressbutton()
         {
             try
@@ -854,6 +838,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to remove dynamically created breadcrumb buttons.
+        /// </summary>
+        /// <param name="Index"></param>
         private void RemoveAddressbutton(int Index)
         {
             try
@@ -874,6 +862,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get category wise product by clicking on breadcrumb buttons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddressBar_Click(object sender, EventArgs e)
         {
             try
@@ -903,6 +896,11 @@ namespace Websmith.Bliss
 
         }
 
+        /// <summary>
+        /// this function is used to reset Breadcrumb button and set default home button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnHome_Click(object sender, EventArgs e)
         {
             try
@@ -921,6 +919,10 @@ namespace Websmith.Bliss
 
         #region Main Menu Tab
 
+        /// <summary>
+        /// this function is used to create dynamically draw main menu panel(resolution wise).
+        /// </summary>
+        /// <param name="pnlName"></param>
         private void drawPanelMenu(string pnlName)
         {
             try
@@ -941,6 +943,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to create dynamic button of category and product.
+        /// it will generate button using window width like 3 column for small window and 4 column for large window
+        /// </summary>
+        /// <param name="ParentID"></param>
         private void getCategory(string ParentID)
         {
             try
@@ -1021,6 +1028,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// when click on menu category or product button then call this event.
+        /// and if you click on product button then it will add to cart.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonClickOneEvent(object sender, EventArgs e)
         {
             try
@@ -1057,6 +1070,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to add to cart item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddProduct_Click(object sender, EventArgs e)
         {
             try
@@ -1086,6 +1104,10 @@ namespace Websmith.Bliss
 
         #region Table Menu Tab
 
+        /// <summary>
+        /// This function is used to draw dynamic panel for display tables
+        /// </summary>
+        /// <param name="pnlName"></param>
         private void drawPanelTableAll(string pnlName)
         {
             try
@@ -1105,6 +1127,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get all table like occupied, vacant.
+        /// it will display screen resolution wise like 3 columns or 4 columns.
+        /// </summary>
         private void getTableAll()
         {
             try
@@ -1245,6 +1271,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is table panel label click event.
+        /// it will open dialog for merge table or transfer table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PanelLabelAll_ClickEvent(object sender, EventArgs e)
         {
             try
@@ -1267,6 +1299,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is table panel click event.
+        /// it will open dialog for merge table or transfer table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PanelTableAll_ClickEvent(object sender, EventArgs e)
         {
             try
@@ -1289,6 +1327,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to draw table panel dynamically for vacant tab.
+        /// </summary>
+        /// <param name="pnlName"></param>
         private void drawPanelTableVacant(string pnlName)
         {
             try
@@ -1308,6 +1350,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get vacant table from database.
+        /// </summary>
         private void getTableVacant()
         {
             try
@@ -1393,12 +1438,21 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this event is now none-use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PanelTableVacant_ClickEvent(object sender, EventArgs e)
         {
             Panel button = sender as Panel;
             //MessageBox.Show("Click On " + button.Tag.ToString());
         }
 
+        /// <summary>
+        /// this function is used to draw table panel dynamically for occupied tab.
+        /// </summary>
+        /// <param name="pnlName"></param>
         private void drawPanelTableOccupied(string pnlName)
         {
             try
@@ -1418,6 +1472,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get occupied table from database.
+        /// </summary>
         private void getTableOccupied()
         {
             try
@@ -1539,7 +1596,13 @@ namespace Websmith.Bliss
                 MessageBox.Show(ex.Message.ToString(), "Order Book", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        
+        /// <summary>
+        /// this is table panel label click event.
+        /// it will open dialog for merge table or transfer table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PanelLabelOccupied_ClickEvent(object sender, EventArgs e)
         {
             try
@@ -1562,6 +1625,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is table panel click event.
+        /// it will open dialog for merge table or transfer table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PanelTableOccupied_ClickEvent(object sender, EventArgs e)
         {
             try
@@ -1588,6 +1657,13 @@ namespace Websmith.Bliss
 
         #region Recent Order Tab
 
+        /// <summary>
+        /// this function is used to get filterd record by dropdown change event like taday, yesterday and custom order by date change.
+        /// it will filter by day, delivery type and search text
+        /// </summary>
+        /// <param name="intDayFilter"></param>
+        /// <param name="intDeliveryType"></param>
+        /// <param name="strSearch"></param>
         private void ComboAllIndexChange(int intDayFilter, int intDeliveryType, string strSearch)
         {
             try
@@ -1665,25 +1741,20 @@ namespace Websmith.Bliss
                     this.GetAllOrder(lstENTOrder);
                 else if (intDeliveryType == Convert.ToInt32(GlobalVariable.DeliveryType.DineIn))
                 {
-                    //lstENTOrder = lstENTOrder.Where(cust => cust.OrderStatus != Convert.ToInt32(GlobalVariable.OrderStatus.CANCEL)).ToList();
                     this.GetDineInOrder(lstENTOrder);
                 }
                 else if (intDeliveryType == Convert.ToInt32(GlobalVariable.DeliveryType.TakeOut))
                 {
-                    //lstENTOrder = lstENTOrder.Where(cust => cust.OrderStatus != Convert.ToInt32(GlobalVariable.OrderStatus.CANCEL)).ToList();
                     this.GetTakeOutOrder(lstENTOrder);
                 }
                 else if (intDeliveryType == Convert.ToInt32(GlobalVariable.DeliveryType.Delivery))
                 {
-                    //lstENTOrder = lstENTOrder.Where(cust => cust.OrderStatus != Convert.ToInt32(GlobalVariable.OrderStatus.CANCEL)).ToList();
                     this.GetDeliveryOrder(lstENTOrder);
                 }
                 else if (intDeliveryType == Convert.ToInt32(GlobalVariable.DeliveryType.Cancel))
                 {
-                    //lstENTOrder = lstENTOrder.Where(cust => Convert.ToInt32(cust.OrderStatus) == 0).ToList();
                     this.GetCancelOrder(lstENTOrder);
                 }
-
             }
             catch (Exception ex)
             {
@@ -1691,6 +1762,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get all types of order like take-out, din-in, delivery, cancel
+        /// </summary>
+        /// <param name="lstENTOrder"></param>
         private void GetAllOrder(List<ENT.OrderBook> lstENTOrder)
         {
             try
@@ -1731,6 +1806,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get din-in type order.
+        /// </summary>
+        /// <param name="lstENTOrder"></param>
         private void GetDineInOrder(List<ENT.OrderBook> lstENTOrder)
         {
             try
@@ -1771,6 +1850,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get take-out type order.
+        /// </summary>
+        /// <param name="lstENTOrder"></param>
         private void GetTakeOutOrder(List<ENT.OrderBook> lstENTOrder)
         {
             try
@@ -1810,6 +1893,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get delivery type order.
+        /// </summary>
+        /// <param name="lstENTOrder"></param>
         private void GetDeliveryOrder(List<ENT.OrderBook> lstENTOrder)
         {
             try
@@ -1849,6 +1936,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get cancel type order.
+        /// </summary>
+        /// <param name="lstENTOrder"></param>
         private void GetCancelOrder(List<ENT.OrderBook> lstENTOrder)
         {
             try
@@ -1888,6 +1979,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is event of txtAllSearch_TextChanged in all order tab
+        /// it will filter records for all types of orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtAllSearch_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1900,6 +1997,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is event of txtDineInSearch_TextChanged in all order tab
+        /// it will filter records for DineIn type of orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtDineInSearch_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1912,6 +2015,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is event of txtTakeOutSearch_TextChanged in all order tab
+        /// it will filter records for TakeOut type of orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtTakeOutSearch_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1924,6 +2033,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is event of txtDeliverySearch_TextChanged in all order tab
+        /// it will filter records for Delivery type of orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtDeliverySearch_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1936,6 +2051,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is event of txtCancelSearch_TextChanged in all order tab
+        /// it will filter records for Cancel type of orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtCancelSearch_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1952,6 +2073,10 @@ namespace Websmith.Bliss
 
         #region Insert Update Order Transation
 
+        /// <summary>
+        /// this function is used to generate new order.
+        /// it will check duplication of order number.
+        /// </summary>
         private void GenerateOrder()
         {
             try
@@ -2032,6 +2157,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to add cart item.
+        /// it save item detail to OrderTransaction table in our db.
+        /// and update cart 
+        /// </summary>
+        /// <param name="ProductID"></param>
         private void AddCartItem(Guid ProductID)
         {
             try
@@ -2089,6 +2220,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used get open order to open mode by click on recent order list of view button.
+        /// and then user can insert update cart item.
+        /// </summary>
+        /// <param name="orderID"></param>
         private void GetOrderTransactionDataForEdit(string orderID)
         {
             DAL.OrderBook objDALOrder = new DAL.OrderBook();
@@ -2164,6 +2300,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to get cart item by order id and diplay in cart grid.
+        /// </summary>
+        /// <param name="orderID"></param>
         private void GetCartItemInList(string orderID)
         {
             try
@@ -2203,6 +2343,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to calulate order tax and discount for order total.
+        /// </summary>
+        /// <param name="orderID"></param>
         private void GetOrderTaxDiscount(string orderID)
         {
             try
@@ -2252,6 +2396,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to update Order and OrderTransaction table.
+        /// </summary>
         private void UpdateOrderTransaction()
         {
             try
@@ -2343,6 +2490,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to update only order table
+        /// </summary>
         private void UpdateOrder()
         {
             try
@@ -3970,6 +4120,12 @@ namespace Websmith.Bliss
 
         #region Calender Event From Recent Order
 
+        /// <summary>
+        /// this is a calender value change event for All tab of recent order tab
+        /// when user change date then this event call and call the ComboAllIndexChange function with require parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtpAllTo_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -3988,6 +4144,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a calender value change event for DineIn tab of recent order tab
+        /// when user change date then this event call and call the ComboAllIndexChange function with require parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtpDineInTo_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -4006,6 +4168,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a calender value change event for TakeOut tab of recent order tab
+        /// when user change date then this event call and call the ComboAllIndexChange function with require parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtpTakeOutTo_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -4024,6 +4192,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a calender value change event for Delivery tab of recent order tab
+        /// when user change date then this event call and call the ComboAllIndexChange function with require parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtpDeliveryTo_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -4042,6 +4216,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a calender value change event for Cancel tab of recent order tab
+        /// when user change date then this event call and call the ComboAllIndexChange function with require parameter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtpCancelTo_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -4062,7 +4242,8 @@ namespace Websmith.Bliss
 
         #endregion
 
-        #region More Menu Tab
+        #region More Menu Tab Buttons Event
+        // below all the buttons events is used to open form dialog for perticular task.
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
@@ -4188,6 +4369,11 @@ namespace Websmith.Bliss
 
         #region Print Duplicate Order Receipt
 
+        /// <summary>
+        /// this function is used to get order by order id
+        /// and send order list to PrintOrderReceipt method of class PrintReceipt.
+        /// </summary>
+        /// <param name="OrderID"></param>
         public void DuplicatePrint(string OrderID)
         {
             try
@@ -4231,6 +4417,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a duplicate print button btnAllPrint_Click event from recent order tab of all order
+        /// here get order id from order list and call above function DuplicatePrint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAllPrint_Click(object sender, EventArgs e)
         {
             try
@@ -4256,6 +4448,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a duplicate print button btnDineInPrint_Click event from recent order tab of all order
+        /// here get order id from order list and call above function DuplicatePrint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDineInPrint_Click(object sender, EventArgs e)
         {
             try
@@ -4281,6 +4479,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a duplicate print button btnTakeOutPrint_Click event from recent order tab of all order
+        /// here get order id from order list and call above function DuplicatePrint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTakeOutPrint_Click(object sender, EventArgs e)
         {
             try
@@ -4306,6 +4510,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this is a duplicate print button btnDeliveryPrint_Click event from recent order tab of all order
+        /// here get order id from order list and call above function DuplicatePrint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeliveryPrint_Click(object sender, EventArgs e)
         {
             try
