@@ -8,6 +8,12 @@ namespace Websmith.Bliss
 {
     public class ClientServerDataParsing
     {
+        /// <summary>
+        /// this function is called when receive any type of json from connected clients.
+        /// parse json using sync code to perticular class.
+        /// </summary>
+        /// <param name="stringJson"></param>
+        /// <returns></returns>
         public static bool GetJsonFrom(string stringJson)
         {
             try
@@ -198,6 +204,11 @@ namespace Websmith.Bliss
             return true;
         }
 
+        /// <summary>
+        /// send received message acknowledgement to sender device
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="ackGuid"></param>
         private static void SendMessageAcknowledgement(string ip, string ackGuid)
         {
             try
@@ -223,6 +234,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// send json to all connected clients
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ackGuid"></param>
         public static void SendJsonTo(string message, string ackGuid)
         {
             try
@@ -238,6 +254,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// send json to all connected clients
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ackGuid"></param>
         public static void SendJsonToAll(string message)
         {
             try
@@ -253,6 +274,12 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// save sent message data to local database.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ip"></param>
+        /// <param name="ackGuid"></param>
         public static void SaveSendMessageData(string message, string ip, string ackGuid)
         {
             try
@@ -271,6 +298,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// send add device request to all running devices in same network.
+        /// </summary>
         public static void AddDeviceRequest()
         {
             try
@@ -295,6 +325,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// send all existing devices to connected clients 
+        /// </summary>
         public static void SendConnectedDeviceToClient()
         {
             try
@@ -340,6 +373,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// delete sync master data from local database
+        /// </summary>
+        /// <param name="objJson"></param>
         private static void DeleteSyncMaster(ENT.SyncGeneralJson objJson)
         {
             try
@@ -365,6 +402,10 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to send current order to all connected devices.
+        /// </summary>
+        /// <param name="OrderID"></param>
         public static void GetNewOrderDetailForSocket(string OrderID)
         {
             try
@@ -431,6 +472,11 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// save error log of socket exception
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="ex"></param>
         public static void SaveSocketErrorLog(string location, Exception ex)
         {
             try
@@ -447,6 +493,10 @@ namespace Websmith.Bliss
             catch { }
         }
 
+        /// <summary>
+        /// write log in to text file.
+        /// </summary>
+        /// <param name="content"></param>
         private static void WriteLog(string content)
         {
             try

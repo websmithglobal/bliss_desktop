@@ -80,9 +80,6 @@ namespace Websmith.Bliss
                     {
                         AsynchronousServer.Send(JsonConvert.SerializeObject(objADDDEVICE), -1);
                     }
-                                        
-                    //SyncResponse.sendMessage(json, ip);
-                    //SyncResponse.sendMessageAcknowledgement(json, ip, context);
                 }
             }
         }

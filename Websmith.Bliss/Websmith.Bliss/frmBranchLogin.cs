@@ -26,11 +26,18 @@ namespace Websmith.Bliss
             InitializeComponent();
         }
 
+        /// <summary>
+        /// call api for get all types of latest data from cloud database.
+        /// inser and update all the data to local database.
+        /// </summary>
+        /// <param name="dataObject"></param>
+        /// <returns></returns>
         private ENT.LoginResponse SendBranchAuthentication(ENT.LoginDetail dataObject)
         {
             ENT.LoginResponse response = new ENT.LoginResponse();
             try
             {
+                // call base api of live database.
                 WebRequest tRequest = WebRequest.Create("http://api.possoftwareindia.com/api/BranchAuthentication");
                 tRequest.Method = "POST";
                 tRequest.ContentType = "application/json";
@@ -55,7 +62,10 @@ namespace Websmith.Bliss
                                 System.IO.StreamWriter file = new System.IO.StreamWriter(Application.StartupPath + "\\JSONData.txt");
                                 file.WriteLine(responseFromFirebaseServer);
                                 file.Close();
+
+                                // This function sync all the data from api and insert/update data to system local database
                                 SyncData();
+
                                 response = Newtonsoft.Json.JsonConvert.DeserializeObject<ENT.LoginResponse>(responseFromFirebaseServer);
                             }
                         }
@@ -154,6 +164,9 @@ namespace Websmith.Bliss
             getSystemInfo();
         }
 
+        /// <summary>
+        /// this function is used to get system ip address.
+        /// </summary>
         private void getSystemInfo()
         {
             try
@@ -178,6 +191,9 @@ namespace Websmith.Bliss
             }
         }
 
+        /// <summary>
+        /// this function is used to sync all tables of data sync from could database.
+        /// </summary>
         private void SyncData()
         {
             try

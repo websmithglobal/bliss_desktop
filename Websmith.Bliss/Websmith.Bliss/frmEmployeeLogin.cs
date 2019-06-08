@@ -28,6 +28,9 @@ namespace Websmith.Bliss
             lstEmpMaster = objRO.EmployeeMasterList;
         }
 
+        /// <summary>
+        /// get branch master setting for set global variable value which is used everywhere in project.
+        /// </summary>
         private void GetBranchMasterSetting()
         {
             try
@@ -62,6 +65,7 @@ namespace Websmith.Bliss
                 string expiryDate = "31/JAN/2020";
                 DateTime dd = Convert.ToDateTime(sysDate);
                 DateTime dd1 = Convert.ToDateTime(expiryDate);
+                // check subscription expiry date validation
                 if (dd >= dd1)
                 {
                     MessageBox.Show("Your subscription is expire, please contact administrator for renew subscription.", "Expiry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -89,7 +93,7 @@ namespace Websmith.Bliss
                 objEntEmp.Mode = "GetRecordByEmpCode";
                 objEntEmp.EmpCode = txtCode.Text.Trim();
                 lstEmp = objDALEmp.getEmployeeMasterList(objEntEmp);
-                //lstEmp = lstEmpMaster.Where(emp => emp.EmpCode.Equals(txtCode.Text.Trim())).ToList();
+                
                 if (lstEmp.Count > 0)
                 {
                     this.GetBranchMasterSetting();
@@ -235,12 +239,14 @@ namespace Websmith.Bliss
                 string expiryDate = "31/JAN/2020";  //"31/DEC/2019"; For Bigbite
                 DateTime dd = Convert.ToDateTime(sysDate);
                 DateTime dd1 = Convert.ToDateTime(expiryDate);
+                // check subscription expiry date validation
                 if (dd >= dd1)
                 {
                     MessageBox.Show("Your subscription is over, please contact administrator for renew subscription.", "Expiry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     lblExpiryMessage.Text = "Your subscription is over, please contact administrator for renew subscription.";
                 }
 
+                // this function is check that is demo version or full version pos
                 if (CheckActivationOrDemo())
                 {
                     btnBack.Enabled = true;
@@ -310,6 +316,7 @@ namespace Websmith.Bliss
                     }
                     else
                     {
+                        // this code is for check demo version expiry date.
                         if (!string.IsNullOrEmpty(lstENT[0].ExpireDate))
                         {
                             DateTime dtSysDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);

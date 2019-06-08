@@ -2070,7 +2070,7 @@ namespace Websmith.Bliss
         }
 
         #endregion
-
+         
         #region Insert Update Order Transation
 
         /// <summary>
@@ -2964,44 +2964,6 @@ namespace Websmith.Bliss
             {
                 MessageBox.Show(ex.Message.ToString(), "Order Book", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnDateWiseItemSale_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                frmItemWiseSalesReport frmIWSR = new frmItemWiseSalesReport();
-                frmIWSR.ShowDialog();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private void btnInward_Click(object sender, EventArgs e)
-        {
-            frmInwardView frmIV = new frmInwardView();
-            frmIV.ShowDialog();
-        }
-
-        private void btnOutward_Click(object sender, EventArgs e)
-        {
-            frmOutwardView frmOV = new frmOutwardView();
-            frmOV.ShowDialog();
-        }
-
-        private void btnReports_Click(object sender, EventArgs e)
-        {
-            frmDateWiseStock frmDWS = new frmDateWiseStock();
-            frmDWS.ShowDialog();
-        }
-
-        private void btnVendorMaster_Click(object sender, EventArgs e)
-        {
-            frmVendorMaster frmVM = new frmVendorMaster();
-            frmVM.ShowDialog();
         }
 
         #endregion
@@ -4363,6 +4325,44 @@ namespace Websmith.Bliss
         {
             pnlSocketCoonection.Visible = false;
             tableSettingMenu.Visible = true;
+        }
+
+        private void btnDateWiseItemSale_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmItemWiseSalesReport frmIWSR = new frmItemWiseSalesReport();
+                frmIWSR.ShowDialog();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void btnInward_Click(object sender, EventArgs e)
+        {
+            frmInwardView frmIV = new frmInwardView();
+            frmIV.ShowDialog();
+        }
+
+        private void btnOutward_Click(object sender, EventArgs e)
+        {
+            frmOutwardView frmOV = new frmOutwardView();
+            frmOV.ShowDialog();
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            frmDateWiseStock frmDWS = new frmDateWiseStock();
+            frmDWS.ShowDialog();
+        }
+
+        private void btnVendorMaster_Click(object sender, EventArgs e)
+        {
+            frmVendorMaster frmVM = new frmVendorMaster();
+            frmVM.ShowDialog();
         }
 
         #endregion
