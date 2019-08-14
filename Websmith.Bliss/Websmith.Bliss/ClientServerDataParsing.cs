@@ -56,7 +56,7 @@ namespace Websmith.Bliss
                             if (obj.getDuplicateReceiveMessageData(objReceiveMessage) > 0)
                             {
                                 //At this time only send message to device for Acknowledgement. Don't store data in db table.
-                                SendMessageAcknowledgement(objReceiveMessage.client_ip, objReceiveMessage.msg_guid.ToString());
+                                //SendMessageAcknowledgement(objReceiveMessage.client_ip, objReceiveMessage.msg_guid.ToString());
 
                                 // change ReceiveMessageData table field of send_acknowledge_status 0 to 1
                                 using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
@@ -200,6 +200,35 @@ namespace Websmith.Bliss
             catch (Exception ex)
             {
                 WriteLog($"Error GetResponseJson => {ex.Message} => {stringJson}");
+                return false;
+            }
+            return true;
+        }
+
+        public static bool GetJsonFrom_Test(string stringJson, string client_ip)
+        {
+            try
+            {
+                string GetJson = string.Empty;
+                if (stringJson != null)
+                {
+                    using (DAL.ReceiveMessageData objDAL = new DAL.ReceiveMessageData())
+                    {
+                        _ = objDAL.InsertUpdateDeleteReceiveMessageData(objENT: new ENT.ReceiveMessageData
+                        {
+                            msg_guid = Guid.NewGuid(),
+                            client_ip = client_ip,
+                            send_acknowledge_status = 0,
+                            message = stringJson,                            
+                            Mode = "ADD"
+                        });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                WriteLog($"Error GetResponseJson => {ex.Message} => {stringJson}");
             }
             return true;
         }
@@ -233,7 +262,7 @@ namespace Websmith.Bliss
                 WriteLog($"SendMessageAcknowledgement => {ex.Message}");
             }
         }
-
+        
         /// <summary>
         /// send json to all connected clients
         /// </summary>
@@ -428,6 +457,8 @@ namespace Websmith.Bliss
 
                 List<ENT.OrderData> lstENTOrder = new List<ENT.OrderData>();
                 lstENTOrder = new DAL.OrderBook().getOrderForSocket(objENT: new ENT.OrderBook { OrderID = new Guid(OrderID), Mode = "GetRecordByOrderIDForSocket" });
+                lstENTOrder[0].time = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+
                 for (int i = 0; i < lstENTOrder.Count; i++)
                 {
                     ENT.Customer objCustomers = new DAL.CustomerMasterData().getCustomerForSocket(objENT: new ENT.CustomerMasterData { Mode = "GetRecordByIDForSocket", CustomerID = new Guid(lstENTOrder[i].customerId) });
@@ -461,9 +492,12 @@ namespace Websmith.Bliss
                 //SendJsonToAll(JsonConvert.SerializeObject(objNEWORDER));
 
                 //This code is for send order json to single server as client
-                if (AsynchronousClient.connected)
-                {
-                    AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
+                //if (AsynchronousClient.connected)
+                //{
+                    if (AsynchronousServer.runningServer)
+                    {
+                    //AsynchronousClient.Send(JsonConvert.SerializeObject(objNEWORDER));
+                    AsynchronousServer.SendToAllClient(JsonConvert.SerializeObject(objNEWORDER), objNEWORDER.ackGuid.ToString());
                 }
             }
             catch (Exception)
@@ -483,10 +517,11 @@ namespace Websmith.Bliss
             {
                 using (DAL.SocketErrorLog objDAL = new DAL.SocketErrorLog())
                 {
-                    objDAL.InsertUpdateDeleteSocketErrorLog(objENT: new ENT.SocketErrorLog {
+                    objDAL.InsertUpdateDeleteSocketErrorLog(objENT: new ENT.SocketErrorLog
+                    {
                         log_error_location = location,
-                        log_exception =ex.Message,
-                        Mode ="ADD"
+                        log_exception = ex.Message,
+                        Mode = "ADD"
                     });
                 }
             }

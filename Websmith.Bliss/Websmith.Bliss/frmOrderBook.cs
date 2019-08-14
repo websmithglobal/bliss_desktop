@@ -4305,7 +4305,12 @@ namespace Websmith.Bliss
         private void btnSocketTest_Click(object sender, EventArgs e)
         {
             //frmSocketServer frmDM = new frmSocketServer();
-            frmSocketTest frmDM = new frmSocketTest();
+            //frmSocketTest frmDM = new frmSocketTest();
+            //frmDM.ShowDialog();
+
+
+
+            Form1 frmDM = new Form1();
             frmDM.ShowDialog();
         }
 
@@ -4542,27 +4547,28 @@ namespace Websmith.Bliss
         }
 
         #endregion
+        
     }
 
     //helper class to modify form object property from another thread than the one from wich form was created
-    class TestFormCotrolHelper
-    {
-        delegate void UniversalVoidDelegate();
+    ////class TestFormCotrolHelper
+    ////{
+    ////    delegate void UniversalVoidDelegate();
 
-        /// <summary>
-        /// Call form controll action from different thread
-        /// </summary>
-        public static void ControlInvike(Control control, Action function)
-        {
-            if (control.IsDisposed || control.Disposing)
-                return;
+    ////    /// <summary>
+    ////    /// Call form controll action from different thread
+    ////    /// </summary>
+    ////    public static void ControlInvike(Control control, Action function)
+    ////    {
+    ////        if (control.IsDisposed || control.Disposing)
+    ////            return;
 
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new UniversalVoidDelegate(() => ControlInvike(control, function)));
-                return;
-            }
-            function();
-        }
-    }
+    ////        if (control.InvokeRequired)
+    ////        {
+    ////            control.Invoke(new UniversalVoidDelegate(() => ControlInvike(control, function)));
+    ////            return;
+    ////        }
+    ////        function();
+    ////    }
+    ////}
 }

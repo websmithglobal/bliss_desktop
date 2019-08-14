@@ -3,17 +3,19 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Drawing.Printing;
+using System.Drawing;
 
 namespace Websmith.Bliss
 {
-    public partial class frmSocketTest : Form
+    public partial class Form1 : Form
     {
         Socket clientSocket;
         bool clientMode = true;
-
+        int attempts = 0;
         AsynchronousClient me;
 
-        public frmSocketTest()
+        public Form1()
         {
             //initialize all graphic components
             InitializeComponent();
@@ -69,7 +71,7 @@ namespace Websmith.Bliss
                         AsynchronousClient.console = this.clientConsole;
                         AsynchronousClient.consoleContainer = this.panel3;
                         AsynchronousClient.StartClient();
-                    }catch(System.FormatException)
+                    }catch(System.FormatException e2)
                     {
                         showAlert("Invalid ip/port");
                     }
@@ -84,6 +86,7 @@ namespace Websmith.Bliss
         //connect server if not already
         private void connect2(object sender, EventArgs e)
         {
+            //timer1.Start();
             if (AsynchronousServer.runningServer)
             {
                 showAlert("Server already running");
@@ -117,7 +120,8 @@ namespace Websmith.Bliss
             {
                 String data = this.input1.Text;
                 AsynchronousClient.Send(data);
-                this.input1.Text = "";
+                send1.Focus();
+                //this.input1.Text = "";
             }
         }
 
@@ -131,7 +135,8 @@ namespace Websmith.Bliss
             else {
                 String data = this.input2.Text;
                 AsynchronousServer.Send(data, -1);
-                this.input2.Text = "";
+                send2.Focus();
+                //this.input2.Text = "";
             }
         }
 
@@ -187,33 +192,91 @@ namespace Websmith.Bliss
             AsynchronousServer.ServerSetControlPropertyThreadSafe(this.serverConsole, "Text", "");
         }
 
-        private void frmSocketTest_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
+            ////PrintDocument pdoc = null;
+            ////PrintDialog pd = new PrintDialog();
+            ////pdoc = new PrintDocument();
+            ////PrinterSettings ps = new PrinterSettings();
+            ////Font font = new Font("Verdana", 15);
+            ////PaperSize psize = new PaperSize("Custom", 100, 200);
+            ////pd.Document = pdoc;
+            ////pd.Document.DefaultPageSettings.PaperSize = psize;
+            ////pdoc.DefaultPageSettings.PaperSize.Height = 820;
+            ////pdoc.DefaultPageSettings.PaperSize.Width = 520;
+            ////pdoc.PrinterSettings.PrinterName = "EPSON TM-m30 Receipt";  //this function return default printer
+            ////pdoc.PrintPage += new PrintPageEventHandler(pdoc_OrderReceipt);  // dynamic event for print receipt
+            ////pdoc.Print();
 
+            //attempts = 0;
+            //timer1.Stop();
+        }
+
+        void pdoc_OrderReceipt(object sender, PrintPageEventArgs e)
+        {
+            try
+            {
+                Graphics graphics = e.Graphics;
+                String underLine = "-------------------------------------------";
+                SolidBrush brush = new SolidBrush(Color.Black);
+                Font fontLine = new Font("Verdana", 10);
+                Font fontCommon = new Font("Verdana", 8);
+                Font fontDetail = new Font("Verdana", 7);
+                Font fontDetailHead = new Font("Verdana", 7, FontStyle.Bold);
+                Font fontHeading = new Font("Verdana", 14, FontStyle.Bold);
+                StringFormat formatRightToLeft = new StringFormat(StringFormatFlags.DirectionRightToLeft);
+                RectangleF rect;
+
+                int startX = 5; // this is start printing after 5px from left (startX means Horizontal)
+                int startY = 5; // this is start printing after 5px from top (startY means Vertical)
+                int Offset = 10; // this will add offset value for new line to startY (startY+Offset)
+                graphics.DrawString(underLine, fontLine, new SolidBrush(Color.Black), startX, startY + Offset);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), "Print", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //attempts++;
+            //if (AsynchronousServer.clients.Count == 0)
+            //{
+            //    showAlert("No client is connected to server");
+            //}
+            //else
+            //{
+            //    String data = "Sent message from server. Count : " + attempts;
+            //    AsynchronousServer.Send(data, -1);
+            //    //send2.Focus();
+            //    //this.input2.Text = "";
+            //}
         }
     }
 
 
     //helper class to modify form object property from another thread than the one from wich form was created
-    //class TestFormCotrolHelper
-    //{
-    //    delegate void UniversalVoidDelegate();
+    class TestFormCotrolHelper
+    {
+        delegate void UniversalVoidDelegate();
 
-    //    /// <summary>
-    //    /// Call form controll action from different thread
-    //    /// </summary>
-    //    public static void ControlInvike(Control control, Action function)
-    //    {
-    //        if (control.IsDisposed || control.Disposing)
-    //            return;
+        /// <summary>
+        /// Call form controll action from different thread
+        /// </summary>
+        public static void ControlInvike(Control control, Action function)
+        {
+            if (control.IsDisposed || control.Disposing)
+                return;
 
-    //        if (control.InvokeRequired)
-    //        {
-    //            control.Invoke(new UniversalVoidDelegate(() => ControlInvike(control, function)));
-    //            return;
-    //        }
-    //        function();
-    //    }
-    //}
+            if (control.InvokeRequired)
+            {
+                control.Invoke(new UniversalVoidDelegate(() => ControlInvike(control, function)));
+                return;
+            }
+            function();
+        }
+    }
 
 }
