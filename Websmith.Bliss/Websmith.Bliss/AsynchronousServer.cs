@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using BAL = Websmith.BusinessLayer;
 using ENT = Websmith.Entity;
+using System.Threading.Tasks;
 
 namespace Websmith.Bliss
 {
@@ -136,7 +137,7 @@ namespace Websmith.Bliss
                     {
                         break;
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
             });
 
@@ -176,6 +177,8 @@ namespace Websmith.Bliss
                 if (client.Value.index != without) //when "without" != -1, means that "without" is index of client that sent this message
                 {
                     client.Value.Send(byteData);
+                    //ClientServerDataParsing.SaveSendMessageData(data, client.Key, "00000000-0000-0000-0000-000000000000");
+                    ClientServerDataParsing.SaveSendMessageData(data, client.Key, Guid.NewGuid().ToString());
                 }
             }
         }
@@ -188,7 +191,7 @@ namespace Websmith.Bliss
             foreach (KeyValuePair<string, Client> client in clients)
             {
                 client.Value.Send(byteData);
-                ClientServerDataParsing.SaveSendMessageData(data, client.Key, ackGuid);
+                ClientServerDataParsing.SaveSendMessageData(data, client.Key, ackGuid);                
                 ServerSetControlPropertyThreadSafe(console, "Text", console.Text + "Server Send: " + client.Key + " => " + data + "\n");
                 //data += "\n";
             }
@@ -291,12 +294,20 @@ namespace Websmith.Bliss
             }
         }
 
-        public void instanceClient()
+        public async Task<int> instanceClient()
+        {
+            await instanceClient1();
+            return 0;
+        }
+
+        public async Task<int> instanceClient1()
         {
             this.connected = true;
             itemStatus.ImageLocation = "green.bmp"; //set connected image in clients list
             new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to connected
 
+            //await Task.Run(() =>{
+            
             chatThread = new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
@@ -328,6 +339,7 @@ namespace Websmith.Bliss
                         {
                             response = Encoding.ASCII.GetString(bytes, 0, receivedBytes);
                             bool result = ClientServerDataParsing.GetJsonFrom(response);
+                            //bool result = ClientServerDataParsing.GetJsonFrom_Test(response, key); 
                             AsynchronousServer.ServerSetControlPropertyThreadSafe(AsynchronousServer.console, "Text", AsynchronousServer.console.Text + "Client " + index + " (" + key + "): " + response);
                             Console.WriteLine("Console height: " + AsynchronousServer.console.Size.Height);
                             //AsynchronousServer.Send(response, index);   // comment by kg
@@ -346,12 +358,13 @@ namespace Websmith.Bliss
             });
 
             chatThread.Start();
+            return 0;
         }
 
         public void Send(byte[] byteData) //send data to client
         {
             if (connected)
-            {
+            { 
                 client.Send(byteData);
             }
         }
@@ -411,7 +424,7 @@ namespace Websmith.Bliss
             if (connected)
             {
                 client.Shutdown(SocketShutdown.Both);
-                client.Close();
+                client.Close();                
                 this.connected = false;
                 itemStatus.ImageLocation = "red.bmp"; //set disconnected image to list item
                 new BAL.DeviceMaster().ChangeStatus(key, 1); // change device status to connected

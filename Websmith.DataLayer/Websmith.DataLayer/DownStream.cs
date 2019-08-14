@@ -30,7 +30,8 @@ namespace Websmith.DataLayer
             DataSet ds = new DataSet("JsonData");
             try
             {
-                WebRequest tRequest = WebRequest.Create("http://api.possoftwareindia.com/api/" + strAPIMethos);
+                //WebRequest tRequest = WebRequest.Create("http://api.possoftwareindia.com/api/" + strAPIMethos);
+                WebRequest tRequest = WebRequest.Create("http://localhost:15367/api/" + strAPIMethos);
                 tRequest.Method = "POST";
                 tRequest.ContentType = "application/json";
 

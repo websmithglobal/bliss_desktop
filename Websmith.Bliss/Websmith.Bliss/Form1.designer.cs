@@ -7,7 +7,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Websmith.Bliss
 {
-    partial class frmSocketTest
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -35,6 +35,7 @@ namespace Websmith.Bliss
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -59,6 +60,7 @@ namespace Websmith.Bliss
             this.start2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -297,7 +299,13 @@ namespace Websmith.Bliss
             this.textBox2.TabIndex = 0;
             this.textBox2.Text = "9091";
             // 
-            // frmSocketTest
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -305,9 +313,9 @@ namespace Websmith.Bliss
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Name = "frmSocketTest";
+            this.Name = "Form1";
             this.Text = "TCP server/client v1.5";
-            this.Load += new System.EventHandler(this.frmSocketTest_Load);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -351,6 +359,7 @@ namespace Websmith.Bliss
         ScrollBar vScrollBar1;
         private Button button3;
         private Button button4;
+        private Timer timer1;
     }
 
 }
