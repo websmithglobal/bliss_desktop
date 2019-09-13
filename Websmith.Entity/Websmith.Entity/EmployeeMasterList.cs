@@ -21,7 +21,7 @@ namespace Websmith.Entity
         public int SalaryType { get; set; }
         public Guid ShiftID { get; set; }
         public string Address { get; set; }
-        public string JoinDate { get; set; }
+        public DateTime JoinDate { get; set; }
         public int IsDisplayInKDS { get; set; }
         public Guid ClassID { get; set; }
         public int Gender { get; set; }

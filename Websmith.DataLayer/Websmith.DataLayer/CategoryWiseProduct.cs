@@ -31,12 +31,12 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@ShortDescription", objENT.ShortDescription);
                 sqlCMD.Parameters.AddWithValue("@IsNonVeg", objENT.IsNonVeg);
                 sqlCMD.Parameters.AddWithValue("@IsTrendingItem", objENT.IsTrendingItem);
-                sqlCMD.Parameters.AddWithValue("@ApproxCookingTime", objENT.ApproxCookingTime);
+                sqlCMD.Parameters.AddWithValue("@ApproxCookingTime", objENT.ApproxCookingTime.ToString());
                 sqlCMD.Parameters.AddWithValue("@IsAellergic", objENT.IsAellergic);
                 sqlCMD.Parameters.AddWithValue("@Extras", objENT.Extras);
                 sqlCMD.Parameters.AddWithValue("@IsVisibleToB2C", objENT.IsVisibleToB2C);
-                sqlCMD.Parameters.AddWithValue("@ExpiryDateFrom", objENT.ExpiryDateFrom);
-                sqlCMD.Parameters.AddWithValue("@ExpiryDateTo", objENT.ExpiryDateTo);
+                sqlCMD.Parameters.AddWithValue("@ExpiryDateFrom", objENT.ExpiryDateFrom.ToString());
+                sqlCMD.Parameters.AddWithValue("@ExpiryDateTo", objENT.ExpiryDateTo.ToString());
                 sqlCMD.Parameters.AddWithValue("@StationID", objENT.StationID);
                 sqlCMD.Parameters.AddWithValue("@SuggestiveItems", objENT.SuggestiveItems);
                 sqlCMD.Parameters.AddWithValue("@IsCold", objENT.IsCold);

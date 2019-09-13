@@ -19,10 +19,10 @@ namespace Websmith.DataLayer
             {
                 sqlCMD = new SqlCommand();
                 sqlCMD.CommandText = "InsertUpdateDeleteTimeSheetWiseDiscount";
-                sqlCMD.Parameters.AddWithValue("@FromTime", objENT.FromTime);
-                sqlCMD.Parameters.AddWithValue("@ToTime", objENT.ToTime);
-                sqlCMD.Parameters.AddWithValue("@StartDate", objENT.StartDate);
-                sqlCMD.Parameters.AddWithValue("@EndDate", objENT.EndDate);
+                sqlCMD.Parameters.AddWithValue("@FromTime", objENT.FromTime.ToString());
+                sqlCMD.Parameters.AddWithValue("@ToTime", objENT.ToTime.ToString());
+                sqlCMD.Parameters.AddWithValue("@StartDate", objENT.StartDate.ToString());
+                sqlCMD.Parameters.AddWithValue("@EndDate", objENT.EndDate.ToString());
                 sqlCMD.Parameters.AddWithValue("@Day", objENT.Day);
                 sqlCMD.Parameters.AddWithValue("@DiscountMasterDetail_Id", objENT.DiscountMasterDetail_Id);
                 sqlCMD.Parameters.AddWithValue("@IsUPStream", objENT.IsUPStream);

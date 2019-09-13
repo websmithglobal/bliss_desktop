@@ -34,7 +34,7 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@SalaryType", objENT.SalaryType);
                 sqlCMD.Parameters.AddWithValue("@ShiftID", objENT.ShiftID);
                 sqlCMD.Parameters.AddWithValue("@Address", objENT.Address);
-                sqlCMD.Parameters.AddWithValue("@JoinDate", objENT.JoinDate);
+                sqlCMD.Parameters.AddWithValue("@JoinDate", objENT.JoinDate.ToString());
                 sqlCMD.Parameters.AddWithValue("@IsDisplayInKDS", objENT.IsDisplayInKDS);
                 sqlCMD.Parameters.AddWithValue("@ClassID", objENT.ClassID);
                 sqlCMD.Parameters.AddWithValue("@Gender", objENT.Gender);

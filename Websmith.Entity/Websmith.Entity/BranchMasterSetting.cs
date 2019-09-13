@@ -27,7 +27,7 @@ namespace Websmith.Entity
         private string _BranchName;
         private string _BranchEmailID;
         private string _MobileNo;
-        private string _LastSyncDate;
+        private DateTime _LastSyncDate;
         private string _VatNo;
         private string _CSTNo;
         private string _ServiceTaxNo;
@@ -152,7 +152,7 @@ namespace Websmith.Entity
             get { return _MobileNo; }
             set { _MobileNo = value; }
         }
-        public string LastSyncDate
+        public DateTime LastSyncDate
         {
             get { return _LastSyncDate; }
             set { _LastSyncDate = value; }

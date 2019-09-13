@@ -446,10 +446,10 @@ namespace Websmith.Bliss
                 {
                     if (cmbSyncFrom.SelectedIndex != 0)
                     {
-                        //DAL.DownStream objDS = new DAL.DownStream(objENTAPI);
-                        //string lines = objDS.Class_DS();
-                        //this.WriteLog(lines);
-                        //MessageBox.Show("This function is temporary unavailable.", "Down Stream", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        DAL.DownStream objDS = new DAL.DownStream(objENTAPI);
+                        string lines = objDS.Class_DS();
+                        this.WriteLog(lines);
+                        MessageBox.Show("This function is temporary unavailable.", "Down Stream", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {

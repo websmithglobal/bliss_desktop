@@ -100,7 +100,6 @@
             this.btnAttendance.TabIndex = 28;
             this.btnAttendance.Text = "Attendance";
             this.btnAttendance.UseVisualStyleBackColor = false;
-            this.btnAttendance.Visible = false;
             this.btnAttendance.Click += new System.EventHandler(this.btnAttendance_Click);
             // 
             // btnRecipe

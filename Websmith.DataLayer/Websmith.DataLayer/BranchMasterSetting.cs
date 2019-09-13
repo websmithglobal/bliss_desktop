@@ -40,7 +40,7 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@BranchName", objENT.BranchName);
                 sqlCMD.Parameters.AddWithValue("@BranchEmailID", objENT.BranchEmailID);
                 sqlCMD.Parameters.AddWithValue("@MobileNo", objENT.MobileNo);
-                sqlCMD.Parameters.AddWithValue("@LastSyncDate", objENT.LastSyncDate);
+                sqlCMD.Parameters.AddWithValue("@LastSyncDate", objENT.LastSyncDate.ToString());
                 sqlCMD.Parameters.AddWithValue("@VatNo", objENT.VatNo);
                 sqlCMD.Parameters.AddWithValue("@CSTNo", objENT.CSTNo);
                 sqlCMD.Parameters.AddWithValue("@ServiceTaxNo", objENT.ServiceTaxNo);

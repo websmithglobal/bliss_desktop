@@ -27,6 +27,7 @@ namespace Websmith.DataLayer
                 sqlCMD.Parameters.AddWithValue("@EmailID", objENT.EmailID);
                 sqlCMD.Parameters.AddWithValue("@Address", objENT.Address);
                 sqlCMD.Parameters.AddWithValue("@CardNo", objENT.CardNo);
+                sqlCMD.Parameters.AddWithValue("@Birthdate", "");
                 sqlCMD.Parameters.AddWithValue("@ShippingAddress", objENT.ShippingAddress);
                 sqlCMD.Parameters.AddWithValue("@RUserID", objENT.RUserID);
                 sqlCMD.Parameters.AddWithValue("@RUserType", objENT.RUserType);

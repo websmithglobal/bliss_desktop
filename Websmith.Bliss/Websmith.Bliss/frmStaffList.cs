@@ -46,15 +46,16 @@ namespace Websmith.Bliss
                     dgvEmployee.Rows[i].Cells["EmpSalaryAmt"].Value = lstENTEmployee[i].SalaryAmt;
                     dgvEmployee.Rows[i].Cells["EmpSalaryTypeName"].Value = lstENTEmployee[i].SalaryTypeName;
                     DateTime dt;
-                    if (GlobalVariable.IsDate(lstENTEmployee[i].JoinDate))
-                    {
-                        dt = Convert.ToDateTime(lstENTEmployee[i].JoinDate);
-                        dgvEmployee.Rows[i].Cells["EmpJoinDate"].Value = dt.ToString("dd/MM/yyyy");
-                    }
-                    else
-                    {
-                        dgvEmployee.Rows[i].Cells["EmpJoinDate"].Value = lstENTEmployee[i].JoinDate;
-                    }
+                    //if (GlobalVariable.IsDate(lstENTEmployee[i].JoinDate))
+                    //{
+                    //    dt = Convert.ToDateTime(lstENTEmployee[i].JoinDate);
+                    //    dgvEmployee.Rows[i].Cells["EmpJoinDate"].Value = dt.ToString("dd/MM/yyyy");
+                    //}
+                    //else
+                    //{
+                    //    dgvEmployee.Rows[i].Cells["EmpJoinDate"].Value = lstENTEmployee[i].JoinDate;
+                    //}
+                    dgvEmployee.Rows[i].Cells["EmpJoinDate"].Value = Convert.ToDateTime(lstENTEmployee[i].JoinDate);
                     dgvEmployee.Rows[i].Cells["EmpIsDisplayInKDS"].Value =Convert.ToBoolean(lstENTEmployee[i].IsDisplayInKDS);
                     dgvEmployee.Rows[i].Cells["EmpGenderName"].Value = lstENTEmployee[i].GenderName;
                     dgvEmployee.Rows[i].Cells["EmpTotalHourInADay"].Value = lstENTEmployee[i].TotalHourInADay;

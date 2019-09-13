@@ -17,7 +17,7 @@ namespace Websmith.DataLayer
         public static string EmployeeID;
         ENT.LoginDetail objENTAPI = new ENT.LoginDetail();
         string BranchID = "";
-        
+
         public DownStream(ENT.LoginDetail objLoginDetail)
         {
             objENTAPI = objLoginDetail;
@@ -69,7 +69,7 @@ namespace Websmith.DataLayer
             }
             return ds;
         }
-        
+
         private DataSet SyncAll()
         {
             string responseFromServer = "";
@@ -186,28 +186,28 @@ namespace Websmith.DataLayer
                                     // 8/24/2017 6:30:44 PM
                                     DateTime dt1;
                                     DateTime date = new DateTime();
-                                    if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", null);
-                                    }
+                                    //if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", null);
+                                    //}
 
-                                    objENTBranch.LastSyncDate = dt.Rows[n]["LastSyncDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(date.ToString("dd/MM/yyyy"));
+                                    objENTBranch.LastSyncDate = dt.Rows[n]["LastSyncDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["LastSyncDate"].ToString());
                                     objENTBranch.VatNo = Convert.ToString(dt.Rows[n]["VatNo"]);
                                     objENTBranch.CSTNo = Convert.ToString(dt.Rows[n]["CSTNo"]);
                                     objENTBranch.ServiceTaxNo = Convert.ToString(dt.Rows[n]["ServiceTaxNo"]);
@@ -285,19 +285,19 @@ namespace Websmith.DataLayer
                                     objENTEmployee.SalaryType = Convert.ToInt32(dt.Rows[n]["SalaryType"]);
                                     DateTime dt1;  // 15/12/2017
                                     DateTime date = new DateTime();
-                                    if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", null);
-                                    }
-                                    else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                    {
-                                        date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", null);
-                                    }
-                                    objENTEmployee.JoinDate = dt.Rows[n]["JoinDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(date.ToString("dd/MM/yyyy"));
+                                    //if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", null);
+                                    //}
+                                    //else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                    //{
+                                    //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", null);
+                                    //}
+                                    objENTEmployee.JoinDate = dt.Rows[n]["JoinDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["JoinDate"].ToString());
                                     objENTEmployee.IsDisplayInKDS = Convert.ToInt32(dt.Rows[n]["IsDisplayInKDS"]);
                                     objENTEmployee.ClassID = new Guid(dt.Rows[n]["ClassID"].ToString());
                                     objENTEmployee.Gender = Convert.ToInt32(dt.Rows[n]["Gender"]);
@@ -448,12 +448,12 @@ namespace Websmith.DataLayer
                                     objENTProduct.ShortDescription = Convert.ToString(dt.Rows[n]["ShortDescription"]);
                                     objENTProduct.IsNonVeg = Convert.ToBoolean(dt.Rows[n]["IsNonVeg"]);
                                     objENTProduct.IsTrendingItem = Convert.ToBoolean(dt.Rows[n]["IsTrendingItem"]);
-                                    objENTProduct.ApproxCookingTime = dt.Rows[n]["ApproxCookingTime"].ToString() == "" ? null : dt.Rows[n]["ApproxCookingTime"].ToString() == "0" ? null : Convert.ToString(dt.Rows[n]["ApproxCookingTime"]);
+                                    objENTProduct.ApproxCookingTime = dt.Rows[n]["ApproxCookingTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ApproxCookingTime"].ToString());
                                     objENTProduct.IsAellergic = Convert.ToBoolean(dt.Rows[n]["IsAellergic"]);
                                     objENTProduct.Extras = dt.Rows[n]["Extras"].ToString() == "" ? null : Convert.ToString(dt.Rows[n]["Extras"]);
                                     objENTProduct.IsVisibleToB2C = Convert.ToBoolean(dt.Rows[n]["IsVisibleToB2C"]);
-                                    objENTProduct.ExpiryDateFrom = dt.Rows[n]["ExpiryDateFrom"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["ExpiryDateFrom"].ToString());
-                                    objENTProduct.ExpiryDateTo = dt.Rows[n]["ExpiryDateTo"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["ExpiryDateTo"].ToString());
+                                    objENTProduct.ExpiryDateFrom = dt.Rows[n]["ExpiryDateFrom"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ExpiryDateFrom"].ToString());
+                                    objENTProduct.ExpiryDateTo = dt.Rows[n]["ExpiryDateTo"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ExpiryDateTo"].ToString());
                                     objENTProduct.StationID = new Guid(dt.Rows[n]["StationID"].ToString());
                                     objENTProduct.SuggestiveItems = Convert.ToString(dt.Rows[n]["SuggestiveItems"]);
                                     objENTProduct.IsCold = Convert.ToBoolean(dt.Rows[n]["IsCold"]);
@@ -588,10 +588,10 @@ namespace Websmith.DataLayer
                                         objDALTSWD.deleteTimeSheetWiseDiscount();
                                     }
                                     objENTTSWD.Mode = "ADD";
-                                    objENTTSWD.FromTime = dt.Rows[n]["FromTime"].ToString() == "" ? null : Convert.ToString(dt.Rows[n]["FromTime"]);
-                                    objENTTSWD.ToTime = dt.Rows[n]["ToTime"].ToString() == "" ? null : Convert.ToString(dt.Rows[n]["ToTime"]);
-                                    objENTTSWD.StartDate = dt.Rows[n]["StartDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["StartDate"].ToString());
-                                    objENTTSWD.EndDate = dt.Rows[n]["EndDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["EndDate"].ToString());
+                                    objENTTSWD.FromTime = dt.Rows[n]["FromTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["FromTime"]);
+                                    objENTTSWD.ToTime = dt.Rows[n]["ToTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ToTime"]);
+                                    objENTTSWD.StartDate = dt.Rows[n]["StartDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["StartDate"].ToString());
+                                    objENTTSWD.EndDate = dt.Rows[n]["EndDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["EndDate"].ToString());
                                     objENTTSWD.Day = Convert.ToInt32(dt.Rows[n]["Day"]);
                                     objENTTSWD.DiscountMasterDetail_Id = Convert.ToInt32(dt.Rows[n]["DiscountMasterDetail_Id"]);
                                     objENTTSWD.IsUPStream = 1;
@@ -803,7 +803,7 @@ namespace Websmith.DataLayer
                                     objENTShift.ShiftID = new Guid(dt.Rows[n]["ShiftID"].ToString());
                                     objENTShift.ShiftName = Convert.ToString(dt.Rows[n]["ShiftName"]);
                                     objENTShift.ShiftMaster_Id = Convert.ToInt32(dt.Rows[n]["ShiftMaster_Id"]);
-                                    
+
                                     if (objDALShift.InsertUpdateDeleteShiftMaster(objENTShift))
                                     {
                                         lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
@@ -834,7 +834,7 @@ namespace Websmith.DataLayer
                                     objENTShiftDetail.FinalSlot = Convert.ToDecimal(dt.Rows[n]["FinalSlot"]);
                                     objENTShiftDetail.ShiftDiff = Convert.ToString(dt.Rows[n]["ShiftDiff"]);
                                     objENTShiftDetail.ShiftMaster_ID = Convert.ToInt32(dt.Rows[n]["ShiftMaster_ID"]);
-                                    
+
                                     if (objDALShiftDetail.InsertUpdateDeleteShiftMasterDetail(objENTShiftDetail))
                                     {
                                         lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
@@ -890,7 +890,7 @@ namespace Websmith.DataLayer
                                     objENTModule.ModuleName = Convert.ToString(dt.Rows[n]["ModuleName"]);
                                     objENTModule.NoOfModule = Convert.ToInt32(dt.Rows[n]["NoOfModule"]);
                                     objENTModule.ModuleMasterDetail_Id = Convert.ToInt32(dt.Rows[n]["ModuleMasterDetail_Id"]);
-                                    
+
                                     if (objDALModule.InsertUpdateDeleteModuleMasterDetail(objENTModule))
                                     {
                                         lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
@@ -1095,7 +1095,7 @@ namespace Websmith.DataLayer
                                     objENTRecipe.RecipeID = new Guid(dt.Rows[n]["RecipeID"].ToString());
                                     objENTRecipe.RecipeText = Convert.ToString(dt.Rows[n]["RecipeText"]);
                                     objENTRecipe.RecipeMasterData_Id = Convert.ToInt32(dt.Rows[n]["RecipeMasterData_Id"]);
-                                    
+
                                     if (objDALRecipe.InsertUpdateDeleteRecipeMasterData(objENTRecipe))
                                     {
                                         lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
@@ -1152,7 +1152,7 @@ namespace Websmith.DataLayer
                                     objENTCustomer.Name = Convert.ToString(dt.Rows[n]["Name"]);
                                     objENTCustomer.MobileNo = Convert.ToString(dt.Rows[n]["MobileNo"]);
                                     objENTCustomer.EmailID = Convert.ToString(dt.Rows[n]["EmailID"]);
-                                    objENTCustomer.Birthdate = dt.Rows[n]["Birthdate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["Birthdate"].ToString());
+                                    objENTCustomer.Birthdate = dt.Rows[n]["Birthdate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["Birthdate"].ToString());
                                     objENTCustomer.Address = Convert.ToString(dt.Rows[n]["Address"]);
                                     objENTCustomer.RUserID = new Guid(dt.Rows[n]["RUserID"].ToString());
                                     if (BranchSettingDetail.IsFranchise(BranchID))
@@ -1238,28 +1238,28 @@ namespace Websmith.DataLayer
 
                                 DateTime dt1;
                                 DateTime date = new DateTime();
-                                if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", null);
-                                }
+                                //if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy hh:mm:ss tt", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "M/dd/yyyy h:mm:ss tt", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy hh:mm:ss tt", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "MM/dd/yyyy h:mm:ss tt", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["LastSyncDate"].ToString(), "dd/MM/yyyy hh:mm:ss tt", null);
+                                //}
 
-                                objENTBranch.LastSyncDate = dt.Rows[n]["LastSyncDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(date.ToString("dd/MM/yyyy"));
+                                objENTBranch.LastSyncDate = dt.Rows[n]["LastSyncDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["LastSyncDate"].ToString());
                                 objENTBranch.VatNo = Convert.ToString(dt.Rows[n]["VatNo"]);
                                 objENTBranch.CSTNo = Convert.ToString(dt.Rows[n]["CSTNo"]);
                                 objENTBranch.ServiceTaxNo = Convert.ToString(dt.Rows[n]["ServiceTaxNo"]);
@@ -1326,7 +1326,7 @@ namespace Websmith.DataLayer
             }
             catch (Exception ex)
             {
-                lines = lines + "Table["+ strTable + "] =>  " + ex.Message.ToString() + " \r\n";
+                lines = lines + "Table[" + strTable + "] =>  " + ex.Message.ToString() + " \r\n";
             }
             return lines;
         }
@@ -1368,19 +1368,19 @@ namespace Websmith.DataLayer
                                 objENTEmployee.SalaryType = Convert.ToInt32(dt.Rows[n]["SalaryType"]);
                                 DateTime dt1;  // 15/12/2017
                                 DateTime date = new DateTime();
-                                if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", null);
-                                }
-                                else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
-                                {
-                                    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", null);
-                                }
-                                objENTEmployee.JoinDate = dt.Rows[n]["JoinDate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(date.ToString("dd/MM/yyyy"));
+                                //if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "M/dd/yyyy", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "MM/dd/yyyy", null);
+                                //}
+                                //else if (DateTime.TryParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out dt1))
+                                //{
+                                //    date = DateTime.ParseExact(dt.Rows[n]["JoinDate"].ToString(), "dd/MM/yyyy", null);
+                                //}
+                                objENTEmployee.JoinDate = dt.Rows[n]["JoinDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["JoinDate"].ToString());
                                 objENTEmployee.IsDisplayInKDS = Convert.ToInt32(dt.Rows[n]["IsDisplayInKDS"]);
                                 objENTEmployee.ClassID = new Guid(dt.Rows[n]["ClassID"].ToString());
                                 objENTEmployee.Gender = Convert.ToInt32(dt.Rows[n]["Gender"]);
@@ -1447,7 +1447,7 @@ namespace Websmith.DataLayer
                 lines = lines + "Last Sync Date And Time : " + DateTime.Now.ToString() + ".\r\n";
                 lines = lines + "========================LOG========================\r\n\n";
                 CategoryMaster objCat = new CategoryMaster();
-                
+
                 foreach (DataTable dt in ds.Tables)
                 {
                     strTable = dt.TableName.ToString();
@@ -1539,12 +1539,12 @@ namespace Websmith.DataLayer
                                 objENTProduct.ShortDescription = Convert.ToString(dt.Rows[n]["ShortDescription"]);
                                 objENTProduct.IsNonVeg = Convert.ToBoolean(dt.Rows[n]["IsNonVeg"]);
                                 objENTProduct.IsTrendingItem = Convert.ToBoolean(dt.Rows[n]["IsTrendingItem"]);
-                                objENTProduct.ApproxCookingTime = dt.Rows[n]["ApproxCookingTime"].ToString() == "" ? null : dt.Rows[n]["ApproxCookingTime"].ToString() == "0" ? null : Convert.ToString(dt.Rows[n]["ApproxCookingTime"]);
+                                objENTProduct.ApproxCookingTime = dt.Rows[n]["ApproxCookingTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ApproxCookingTime"].ToString());
                                 objENTProduct.IsAellergic = Convert.ToBoolean(dt.Rows[n]["IsAellergic"]);
                                 objENTProduct.Extras = dt.Rows[n]["Extras"].ToString() == "" ? null : Convert.ToString(dt.Rows[n]["Extras"]);
                                 objENTProduct.IsVisibleToB2C = Convert.ToBoolean(dt.Rows[n]["IsVisibleToB2C"]);
-                                objENTProduct.ExpiryDateFrom = dt.Rows[n]["ExpiryDateFrom"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["ExpiryDateFrom"].ToString());
-                                objENTProduct.ExpiryDateTo = dt.Rows[n]["ExpiryDateTo"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["ExpiryDateTo"].ToString());
+                                objENTProduct.ExpiryDateFrom = dt.Rows[n]["ExpiryDateFrom"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ExpiryDateFrom"].ToString());
+                                objENTProduct.ExpiryDateTo = dt.Rows[n]["ExpiryDateTo"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ExpiryDateTo"].ToString());
                                 objENTProduct.StationID = new Guid(dt.Rows[n]["StationID"].ToString());
                                 objENTProduct.SuggestiveItems = Convert.ToString(dt.Rows[n]["SuggestiveItems"]);
                                 objENTProduct.IsCold = Convert.ToBoolean(dt.Rows[n]["IsCold"]);
@@ -1918,7 +1918,7 @@ namespace Websmith.DataLayer
                                 objENTCustomer.Name = Convert.ToString(dt.Rows[n]["Name"]);
                                 objENTCustomer.MobileNo = Convert.ToString(dt.Rows[n]["MobileNo"]);
                                 objENTCustomer.EmailID = Convert.ToString(dt.Rows[n]["EmailID"]);
-                                objENTCustomer.Birthdate = dt.Rows[n]["Birthdate"].ToString() == "" ? null : ENT.APIStream.ChangeDate(dt.Rows[n]["Birthdate"].ToString());
+                                objENTCustomer.Birthdate = dt.Rows[n]["Birthdate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["Birthdate"].ToString());
                                 objENTCustomer.Address = Convert.ToString(dt.Rows[n]["Address"]);
                                 objENTCustomer.RUserID = new Guid(dt.Rows[n]["RUserID"].ToString());
                                 if (BranchSettingDetail.IsFranchise(BranchID))
@@ -2034,7 +2034,7 @@ namespace Websmith.DataLayer
                                 objENTTran.CategoryID = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["CategoryID"])) ? new Guid("00000000-0000-0000-0000-000000000000") : new Guid(Convert.ToString(dt.Rows[n]["CategoryID"]));
                                 objENTTran.ProductID = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["ProductID"])) ? new Guid("00000000-0000-0000-0000-000000000000") : new Guid(Convert.ToString(dt.Rows[n]["ProductID"]));
                                 objENTTran.EmployeeID = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["EmployeeID"])) ? new Guid("00000000-0000-0000-0000-000000000000") : new Guid(Convert.ToString(dt.Rows[n]["EmployeeID"]));
-                                objENTTran.Quantity = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["Quantity"])) ? 0 : Convert.ToInt32(dt.Rows[n]["Quantity"].ToString().Substring(0, dt.Rows[n]["Quantity"].ToString().Length-3));
+                                objENTTran.Quantity = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["Quantity"])) ? 0 : Convert.ToInt32(dt.Rows[n]["Quantity"].ToString().Substring(0, dt.Rows[n]["Quantity"].ToString().Length - 3));
                                 objENTTran.Rate = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["ItemPrice"])) ? 0 : Convert.ToDecimal(dt.Rows[n]["ItemPrice"]);
                                 objENTTran.SpecialRequest = string.IsNullOrEmpty(Convert.ToString(dt.Rows[n]["SpecialRemarks"])) ? "" : Convert.ToString(dt.Rows[n]["SpecialRemarks"]);
                                 DateTime date = Convert.ToDateTime(Convert.ToString(dt.Rows[n]["StartDate"]));
@@ -2146,7 +2146,7 @@ namespace Websmith.DataLayer
             }
             catch (Exception ex)
             {
-                lines = lines + "Table[" + strTable + "] => LineNo["+ line_no + "] => " + ex.Message.ToString() + " \r\n";
+                lines = lines + "Table[" + strTable + "] => LineNo[" + line_no + "] => " + ex.Message.ToString() + " \r\n";
             }
             return lines;
         }
@@ -2265,6 +2265,36 @@ namespace Websmith.DataLayer
                             }
                             #endregion
                             break;
+                        case "TimeSheetWiseDiscount":
+                            #region TimeSheetWiseDiscount
+                            ENT.TimeSheetWiseDiscount objENTTSWD = new ENT.TimeSheetWiseDiscount();
+                            TimeSheetWiseDiscount objDALTSWD = new TimeSheetWiseDiscount();
+                            for (int n = 0; n < dt.Rows.Count; n++)
+                            {
+                                if (n == 0)
+                                {
+                                    objDALTSWD.deleteTimeSheetWiseDiscount();
+                                }
+                                objENTTSWD.Mode = "ADD";
+                                objENTTSWD.FromTime = dt.Rows[n]["FromTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["FromTime"]);
+                                objENTTSWD.ToTime = dt.Rows[n]["ToTime"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["ToTime"]);
+                                objENTTSWD.StartDate = dt.Rows[n]["StartDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["StartDate"].ToString());
+                                objENTTSWD.EndDate = dt.Rows[n]["EndDate"].ToString() == "" ? DateTime.MinValue : Convert.ToDateTime(dt.Rows[n]["EndDate"].ToString());
+                                objENTTSWD.Day = Convert.ToInt32(dt.Rows[n]["Day"]);
+                                objENTTSWD.DiscountMasterDetail_Id = Convert.ToInt32(dt.Rows[n]["DiscountMasterDetail_Id"]);
+                                objENTTSWD.IsUPStream = 1;
+
+                                if (objDALTSWD.InsertUpdateDeleteTimeSheetWiseDiscount(objENTTSWD))
+                                {
+                                    lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
+                                }
+                                else
+                                {
+                                    lines = lines + "Problem => " + dt.TableName.ToString() + " Data Insert.\r\n";
+                                }
+                            }
+                            #endregion
+                            break;
                         case "VersionDetail":
                             break;
                         case "RootObject":
@@ -2308,6 +2338,10 @@ namespace Websmith.DataLayer
                                 { objENTVendor.Mode = "ADD"; }
                                 objENTVendor.VendorID = new Guid(dt.Rows[n]["VendorID"].ToString());
                                 objENTVendor.VendorName = Convert.ToString(dt.Rows[n]["VendorName"]);
+                                objENTVendor.VendorAddress = Convert.ToString(dt.Rows[n]["VendorAddress"]);
+                                objENTVendor.MobileNo = Convert.ToString(dt.Rows[n]["MobileNo"]);
+                                objENTVendor.EmailID = Convert.ToString(dt.Rows[n]["EmailID"]);
+                                objENTVendor.CompanyName = Convert.ToString(dt.Rows[n]["CompanyName"]);
                                 objENTVendor.RUserID = new Guid(BranchID);
                                 if (BranchSettingDetail.IsFranchise(BranchID))
                                 { objENTVendor.RUserType = Convert.ToInt32(ENT.APIStream.R_USER_TYPE.FRANCHISE); }
@@ -2355,6 +2389,33 @@ namespace Websmith.DataLayer
                 {
                     switch (dt.TableName.ToString())
                     {
+                        case "RecipeMasterData":
+                            #region RecipeMasterData
+                            ENT.RecipeMasterData objENTRecipe = new ENT.RecipeMasterData();
+                            RecipeMasterData objDALRecipe = new RecipeMasterData();
+                            for (int n = 0; n < dt.Rows.Count; n++)
+                            {
+                                if (objDALRecipe.getDuplicateRecipeMasterDataByID(dt.Rows[n]["RecipeID"].ToString()) > 0)
+                                { objENTRecipe.Mode = "UPDATE"; }
+                                else
+                                { objENTRecipe.Mode = "ADD"; }
+                                objENTRecipe.ProductID = new Guid(dt.Rows[n]["ProductID"].ToString());
+                                objENTRecipe.ProductName = Convert.ToString(dt.Rows[n]["ProductName"]);
+                                objENTRecipe.RecipeID = new Guid(dt.Rows[n]["RecipeID"].ToString());
+                                objENTRecipe.RecipeText = Convert.ToString(dt.Rows[n]["RecipeText"]);
+                                objENTRecipe.RecipeMasterData_Id = Convert.ToInt32(dt.Rows[n]["RecipeMasterData_Id"]);
+
+                                if (objDALRecipe.InsertUpdateDeleteRecipeMasterData(objENTRecipe))
+                                {
+                                    lines = lines + "Table => " + dt.TableName.ToString() + " Data Inserted.\r\n";
+                                }
+                                else
+                                {
+                                    lines = lines + "Problem => " + dt.TableName.ToString() + " Data Insert.\r\n";
+                                }
+                            }
+                            #endregion
+                            break;
                         case "RecipeMasterDetail":
                             #region RecipeMasterDetail
                             ENT.RecipeMasterDetail objENTRecipeDetail = new ENT.RecipeMasterDetail();
@@ -2373,7 +2434,7 @@ namespace Websmith.DataLayer
                                 objENTRecipeDetail.IsQty = Convert.ToBoolean(dt.Rows[n]["IsQty"]);
                                 objENTRecipeDetail.UnitTypeID = new Guid(dt.Rows[n]["UnitTypeID"].ToString());
                                 objENTRecipeDetail.UnitType = Convert.ToString(dt.Rows[n]["UnitType"]);
-                                objENTRecipeDetail.RecipeMasterData_Id = Convert.ToInt32(dt.Rows[n]["RecipeMasterData_Id"]);
+                                objENTRecipeDetail.RecipeMasterData_Id = 0;
                                 objENTRecipeDetail.IsUPStream = 1;
 
                                 if (objDALRecipeDetail.InsertUpdateDeleteRecipeMasterDetail(objENTRecipeDetail))

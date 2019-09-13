@@ -21,12 +21,12 @@ namespace Websmith.Entity
         private string _Description;
         private bool _IsNonVeg;
         private bool _IsTrendingItem;
-        private string _ApproxCookingTime;
+        private DateTime _ApproxCookingTime;
         private bool _IsAellergic;
         private string _Extras;
         private bool _IsVisibleToB2C;
-        private string _ExpiryDateFrom;
-        private string _ExpiryDateTo;
+        private DateTime _ExpiryDateFrom;
+        private DateTime _ExpiryDateTo;
         private Guid _StationID;
         private string _SuggestiveItems;
         private bool _IsCold;
@@ -112,7 +112,7 @@ namespace Websmith.Entity
             get { return _IsTrendingItem; }
             set { _IsTrendingItem = value; }
         }
-        public string ApproxCookingTime
+        public DateTime ApproxCookingTime
         {
             get { return _ApproxCookingTime; }
             set { _ApproxCookingTime = value; }
@@ -132,12 +132,12 @@ namespace Websmith.Entity
             get { return _IsVisibleToB2C; }
             set { _IsVisibleToB2C = value; }
         }
-        public string ExpiryDateFrom
+        public DateTime ExpiryDateFrom
         {
             get { return _ExpiryDateFrom; }
             set { _ExpiryDateFrom = value; }
         }
-        public string ExpiryDateTo
+        public DateTime ExpiryDateTo
         {
             get { return _ExpiryDateTo; }
             set { _ExpiryDateTo = value; }

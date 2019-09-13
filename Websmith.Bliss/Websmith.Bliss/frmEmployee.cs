@@ -135,7 +135,7 @@ namespace Websmith.Bliss
                     objENTEmployee.SalaryAmt = Convert.ToDecimal(txtSalary.Text);
                     objENTEmployee.SalaryType = Convert.ToInt32(cmbSalaryType.SelectedIndex + 1);
                     objENTEmployee.ShiftID = new Guid(cmbShift.SelectedValue.ToString());
-                    objENTEmployee.JoinDate = GlobalVariable.ChangeDate(txtJoinDate.Text.ToString());
+                    objENTEmployee.JoinDate = Convert.ToDateTime(txtJoinDate.Text.ToString());
                     objENTEmployee.IsDisplayInKDS = chkKDS.Checked == true ? 1 : 0;
                     objENTEmployee.RUserID = new Guid(GlobalVariable.BranchID);
                     objENTEmployee.RUserType = GlobalVariable.RUserType;
@@ -225,7 +225,7 @@ namespace Websmith.Bliss
                     cmbSalaryType.SelectedIndex = lstENTEmployee[0].SalaryType - 1;
                     cmbShift.SelectedValue = lstENTEmployee[0].ShiftID;
                     txtAddress.Text = Convert.ToString(lstENTEmployee[0].Address);
-                    txtJoinDate.Text = lstENTEmployee[0].JoinDate;
+                    txtJoinDate.Text = (lstENTEmployee[0].JoinDate.ToString("dd/mm/yyyy"));
                     if (Convert.ToInt32(lstENTEmployee[0].IsDisplayInKDS) == 1)
                         chkKDS.Checked = true;
                     else if (Convert.ToInt32(lstENTEmployee[0].Gender) == 0)

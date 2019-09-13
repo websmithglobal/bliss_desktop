@@ -8,10 +8,10 @@ namespace Websmith.Entity
     public class TimeSheetWiseDiscount
     {
         #region Private Fields
-        private string _FromTime;
-        private string _ToTime;
-        private string _StartDate;
-        private string _EndDate;
+        private DateTime _FromTime;
+        private DateTime _ToTime;
+        private DateTime _StartDate;
+        private DateTime _EndDate;
         private int _Day;
         private int _DiscountMasterDetail_Id;
         private string _Mode;
@@ -20,22 +20,22 @@ namespace Websmith.Entity
 
         #region Public Properties
 
-        public string FromTime
+        public DateTime FromTime
         {
             get { return _FromTime; }
             set { _FromTime = value; }
         }
-        public string ToTime
+        public DateTime ToTime
         {
             get { return _ToTime; }
             set { _ToTime = value; }
         }
-        public string StartDate
+        public DateTime StartDate
         {
             get { return _StartDate; }
             set { _StartDate = value; }
         }
-        public string EndDate
+        public DateTime EndDate
         {
             get { return _EndDate; }
             set { _EndDate = value; }

@@ -11,7 +11,7 @@ namespace Websmith.Entity
         public string Name { get; set; }
         public string MobileNo { get; set; }
         public string EmailID { get; set; }
-        public string Birthdate { get; set; }
+        public DateTime Birthdate { get; set; }
         public string Address { get; set; }
         public int IsUPStream { get; set; } = 0;
         public string ShippingAddress { get; set; }
@@ -27,7 +27,7 @@ namespace Websmith.Entity
         public string Name { get; set; }
         public string MobileNo { get; set; }
         public string EmailID { get; set; }
-        public string Birthdate { get; set; }
+        public DateTime Birthdate { get; set; }
         public string Address { get; set; }
         public int IsUPStream { get; set; } = 0;
         public string ShippingAddress { get; set; }

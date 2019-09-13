@@ -9,7 +9,7 @@ namespace Websmith.Entity
     {
         public Guid OrderID { get; set; } = new Guid("00000000-0000-0000-0000-000000000000");
         public Guid CustomerID { get; set; } = new Guid("00000000-0000-0000-0000-000000000000");
-        public string OrderDate { get; set; } = "";
+        public DateTime OrderDate { get; set; } 
         public Guid EmployeeID { get; set; } = new Guid("00000000-0000-0000-0000-000000000000");
         public int OrderStatus { get; set; } = 0;
         public string OrderStatusReason { get; set; } = "";
